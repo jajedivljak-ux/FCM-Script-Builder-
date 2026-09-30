@@ -1,6 +1,6 @@
 {
-  "name": "fcm-ad-script-builder",
-  "version": "1.0.0",
+  "name": "ad-script-builder",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,8 +8,13 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "14.2.3",
-    "react": "^18",
-    "react-dom": "^18"
+    "next": "14.0.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.0.6",
+    "@babel/preset-react": "^8.0.1",
+    "@babel/standalone": "^7.29.9"
   }
 }
