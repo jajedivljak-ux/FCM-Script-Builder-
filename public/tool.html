@@ -1213,17 +1213,21 @@ CONTEXT:
 CONTENT FROM BUILDER:
 ${answersText}
 
+WHAT A HOOK IS: the first 1 to 2 sentences spoken on camera. The opening line only, not the ad. Hard limits: maximum 2 sentences, maximum 25 words. If you write a third sentence you have failed.
+
 HUMANIZER RULES — apply every single one:
 - Write for SPOKEN WORD. Every line should sound natural when said out loud.
 - Short sentences. Punchy rhythm. No filler words.
 - Never open with "I". Always lead with them (their pain, their world, their situation).
+- No em dashes or en dashes anywhere. Use a comma or a full stop instead.
 - Avoid: "game-changing", "transform", "unlock", "skyrocket", "revolutionize", "journey", "leverage", "seamless"
+- No weak openers: "Imagine", "Hey guys", "Are you tired of", "Did you know", "What if".
 - Use specific numbers, not vague adjectives.
-- Mirror the language a real person would use in conversation — not ad copy.
+- Mirror the language a real person would use in conversation, not ad copy.
 - Never rhyme unless it's completely natural.
-- The hook must stop the scroll in the first 2–3 seconds.
+- The hook must stop the scroll in the first 2 to 3 seconds.
 
-Generate exactly 3 distinct hooks. Each should take a different angle. Format your response as:
+Generate exactly 3 distinct hooks. Each takes a different angle: one calls out the avatar directly, one names the pain, one makes a bold or contrarian claim. Format your response EXACTLY as:
 
 HOOK 1:
 [hook text]
@@ -1279,6 +1283,7 @@ HUMANIZER RULES — non-negotiable:
 1. Write entirely for spoken delivery. Test every line by reading it aloud.
 2. Short sentences. Average under 12 words. Vary rhythm — short, shorter, medium, short.
 3. Never open with "I". The hook leads with them.
+3b. No em dashes or en dashes anywhere in the script. Use a comma or a full stop. This is a hard rule.
 4. No ad-speak: "game-changing", "transform", "unlock", "skyrocket", "journey", "leverage", "seamless", "revolutionize", "cutting-edge"
 5. No weak intros: "Hey guys", "So I wanted to share", "Today I'm going to", "Are you tired of"
 6. Every claim needs specificity. Numbers beat adjectives. Names beat "a client".
@@ -1291,6 +1296,24 @@ HUMANIZER RULES — non-negotiable:
 Output ONLY the script. No headers, no section labels, no word count, no notes. Just the script as it would be spoken.`;
 }
 
+// Strip dashes the model sneaks in, and tidy whitespace. Applied to every generated text.
+function cleanCopy(text) {
+  return String(text || "")
+    .replace(/\s*[—–]\s*/g, ", ")          // em and en dashes become a comma
+    .replace(/\s+-\s+/g, ", ")             // spaced hyphen used as a dash
+    .replace(/,\s*,/g, ",")
+    .replace(/\s+([,.!?])/g, "$1")
+    .replace(/\(,\s*/g, "(")
+    .replace(/,\s*\)/g, ")")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function firstSentences(text, max) {
+  const parts = text.replace(/\n+/g, " ").match(/[^.!?]+[.!?]+["']?|[^.!?]+$/g) || [text];
+  return parts.slice(0, max).join(" ").replace(/\s+/g, " ").trim();
+}
+
 function parseHooks(text) {
   const hooks = [];
   const parts = text.split(/HOOK\s*\d+\s*:/i).filter(p => p.trim());
@@ -1299,10 +1322,9 @@ function parseHooks(text) {
     if (cleaned) hooks.push(cleaned);
   }
   // fallback: split by double newlines if parsing fails
-  if (hooks.length < 2) {
-    return text.split(/\n\n+/).filter(p => p.trim()).slice(0, 3);
-  }
-  return hooks.slice(0, 3);
+  let out = hooks.length >= 2 ? hooks.slice(0, 3) : text.split(/\n\n+/).filter(p => p.trim()).slice(0, 3);
+  // A hook is the opening line only. Trim anything longer to its first two sentences.
+  return out.map(h => cleanCopy(firstSentences(h.replace(/^["'\s]+|["'\s]+$/g, ""), 2)));
 }
 
 function audienceContext() {
@@ -1375,8 +1397,8 @@ Nothing else.`;
 
 function parseCaptions(text) {
   const parts = text.split(/CAPTION\s*\d+\s*:/i).map(p => p.trim()).filter(Boolean);
-  if (parts.length >= 2) return parts.slice(0, 3);
-  return text.split(/\n\n+/).map(p => p.trim()).filter(Boolean).slice(0, 3);
+  const out = parts.length >= 2 ? parts.slice(0, 3) : text.split(/\n\n+/).map(p => p.trim()).filter(Boolean).slice(0, 3);
+  return out.map(cleanCopy);
 }
 
 const REFINE_ANGLES = [
@@ -2379,7 +2401,7 @@ async function generateScript() {
   try {
     const results = await Promise.all(
       state.adDurations.map(async durId => {
-        const text = (await callAPI(buildScriptPrompt(durId), 1200)).trim();
+        const text = cleanCopy(await callAPI(buildScriptPrompt(durId), 1200));
         let captions = [];
         try { captions = parseCaptions(await callAPI(buildCaptionPrompt(durId, text), 900)); } catch (e) { captions = []; }
         return { durId, text, captions };
@@ -2410,7 +2432,7 @@ async function refineScript(durId, instruction, label) {
   state.refineError[durId] = "";
   render();
   try {
-    const text = (await callAPI(buildRefinePrompt(durId, current.text, instruction), 1200)).trim();
+    const text = cleanCopy(await callAPI(buildRefinePrompt(durId, current.text, instruction), 1200));
     let captions = [];
     try { captions = parseCaptions(await callAPI(buildCaptionPrompt(durId, text), 900)); } catch (e) { captions = []; }
     history.push({ label, text, captions });
