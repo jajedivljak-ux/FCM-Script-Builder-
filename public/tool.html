@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ad Script Builder</title>
+<!-- build: 2026-10-03 v3 captions+refine+clean -->
 <style>html,body{margin:0;background:#0d0d0d}</style>
 </head>
 <body>
@@ -1299,6 +1300,8 @@ Output ONLY the script. No headers, no section labels, no word count, no notes. 
 // Strip dashes the model sneaks in, and tidy whitespace. Applied to every generated text.
 function cleanCopy(text) {
   return String(text || "")
+    .replace(/^\s*[-_*=]{2,}\s*$/gm, "")   // separator lines like --- or ***
+    .replace(/\s*[-_*=]{3,}\s*$/g, "")     // trailing --- on the last line
     .replace(/\s*[—–]\s*/g, ", ")          // em and en dashes become a comma
     .replace(/\s+-\s+/g, ", ")             // spaced hyphen used as a dash
     .replace(/,\s*,/g, ",")
