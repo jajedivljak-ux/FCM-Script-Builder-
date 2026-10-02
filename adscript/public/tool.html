@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ad Script Builder</title>
+<!-- build: 2026-10-03 v3 captions+refine+clean -->
 <style>html,body{margin:0;background:#0d0d0d}</style>
 </head>
 <body>
@@ -911,6 +912,29 @@ body {
 .niche-textarea { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: inherit; font-size: 14px; line-height: 1.5; padding: 12px 14px; resize: none; transition: border-color 0.15s; width: 100%; }
 .niche-textarea:focus { border-color: var(--accent); outline: none; }
 .niche-textarea::placeholder { color: var(--text-muted); }
+.niche-textarea:disabled { opacity: 0.5; }
+
+/* ── Versions, captions, refine ── */
+.version-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 12px; }
+.version-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); margin-right: 4px; }
+.version-pill { background: var(--elevated); border: 1px solid var(--border); border-radius: 99px; padding: 4px 12px; font-size: 12px; color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s; }
+.version-pill:hover { border-color: var(--text-muted); color: var(--text); }
+.version-pill.active { background: var(--accent-dim2); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+.captions-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px 8px; margin-bottom: 16px; }
+.captions-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.captions-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.captions-empty { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-bottom: 12px; }
+.caption-card { background: var(--elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px; }
+.caption-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.caption-num { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.caption-text { font-size: 13px; line-height: 1.65; white-space: pre-wrap; color: var(--text); }
+
+.refine-wrap { background: var(--card); border: 1px solid var(--accent); border-radius: var(--radius); padding: 16px 20px 18px; margin-bottom: 16px; }
+.angle-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+.angle-pill { background: var(--elevated); border: 1px solid var(--border); border-radius: 99px; padding: 6px 14px; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s; }
+.angle-pill:hover:not(:disabled) { border-color: var(--accent); color: var(--text); background: var(--accent-dim); }
+.angle-pill:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
 
 <div id="app"></div>
@@ -1115,6 +1139,11 @@ let state = {
   generatedHooks: [],
   selectedHook: null,
   generatedScripts: {},
+  scriptHistory: {},
+  activeVersion: {},
+  refineLoading: {},
+  refineError: {},
+  refineText: {},
   activeDurationTab: null,
   loading: false,
   loadingMessage: "",
@@ -1185,17 +1214,21 @@ CONTEXT:
 CONTENT FROM BUILDER:
 ${answersText}
 
+WHAT A HOOK IS: the first 1 to 2 sentences spoken on camera. The opening line only, not the ad. Hard limits: maximum 2 sentences, maximum 25 words. If you write a third sentence you have failed.
+
 HUMANIZER RULES — apply every single one:
 - Write for SPOKEN WORD. Every line should sound natural when said out loud.
 - Short sentences. Punchy rhythm. No filler words.
 - Never open with "I". Always lead with them (their pain, their world, their situation).
+- No em dashes or en dashes anywhere. Use a comma or a full stop instead.
 - Avoid: "game-changing", "transform", "unlock", "skyrocket", "revolutionize", "journey", "leverage", "seamless"
+- No weak openers: "Imagine", "Hey guys", "Are you tired of", "Did you know", "What if".
 - Use specific numbers, not vague adjectives.
-- Mirror the language a real person would use in conversation — not ad copy.
+- Mirror the language a real person would use in conversation, not ad copy.
 - Never rhyme unless it's completely natural.
-- The hook must stop the scroll in the first 2–3 seconds.
+- The hook must stop the scroll in the first 2 to 3 seconds.
 
-Generate exactly 3 distinct hooks. Each should take a different angle. Format your response as:
+Generate exactly 3 distinct hooks. Each takes a different angle: one calls out the avatar directly, one names the pain, one makes a bold or contrarian claim. Format your response EXACTLY as:
 
 HOOK 1:
 [hook text]
@@ -1251,6 +1284,7 @@ HUMANIZER RULES — non-negotiable:
 1. Write entirely for spoken delivery. Test every line by reading it aloud.
 2. Short sentences. Average under 12 words. Vary rhythm — short, shorter, medium, short.
 3. Never open with "I". The hook leads with them.
+3b. No em dashes or en dashes anywhere in the script. Use a comma or a full stop. This is a hard rule.
 4. No ad-speak: "game-changing", "transform", "unlock", "skyrocket", "journey", "leverage", "seamless", "revolutionize", "cutting-edge"
 5. No weak intros: "Hey guys", "So I wanted to share", "Today I'm going to", "Are you tired of"
 6. Every claim needs specificity. Numbers beat adjectives. Names beat "a client".
@@ -1263,6 +1297,26 @@ HUMANIZER RULES — non-negotiable:
 Output ONLY the script. No headers, no section labels, no word count, no notes. Just the script as it would be spoken.`;
 }
 
+// Strip dashes the model sneaks in, and tidy whitespace. Applied to every generated text.
+function cleanCopy(text) {
+  return String(text || "")
+    .replace(/^\s*[-_*=]{2,}\s*$/gm, "")   // separator lines like --- or ***
+    .replace(/\s*[-_*=]{3,}\s*$/g, "")     // trailing --- on the last line
+    .replace(/\s*[—–]\s*/g, ", ")          // em and en dashes become a comma
+    .replace(/\s+-\s+/g, ", ")             // spaced hyphen used as a dash
+    .replace(/,\s*,/g, ",")
+    .replace(/\s+([,.!?])/g, "$1")
+    .replace(/\(,\s*/g, "(")
+    .replace(/,\s*\)/g, ")")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function firstSentences(text, max) {
+  const parts = text.replace(/\n+/g, " ").match(/[^.!?]+[.!?]+["']?|[^.!?]+$/g) || [text];
+  return parts.slice(0, max).join(" ").replace(/\s+/g, " ").trim();
+}
+
 function parseHooks(text) {
   const hooks = [];
   const parts = text.split(/HOOK\s*\d+\s*:/i).filter(p => p.trim());
@@ -1271,10 +1325,114 @@ function parseHooks(text) {
     if (cleaned) hooks.push(cleaned);
   }
   // fallback: split by double newlines if parsing fails
-  if (hooks.length < 2) {
-    return text.split(/\n\n+/).filter(p => p.trim()).slice(0, 3);
-  }
-  return hooks.slice(0, 3);
+  let out = hooks.length >= 2 ? hooks.slice(0, 3) : text.split(/\n\n+/).filter(p => p.trim()).slice(0, 3);
+  // A hook is the opening line only. Trim anything longer to its first two sentences.
+  return out.map(h => cleanCopy(firstSentences(h.replace(/^["'\s]+|["'\s]+$/g, ""), 2)));
+}
+
+function audienceContext() {
+  const mode = AD_MODES[state.adMode];
+  const stage = AWARENESS_STAGES.find(s => s.id === state.awarenessStage);
+  const soph = SOPHISTICATION_LEVELS.find(s => s.id === state.sophistication);
+  return `AUDIENCE & NICHE:
+- Niche: ${state.niche}
+- Target Avatar: ${state.avatar}
+- Their Top Pain Points: ${state.painPoints}
+- Their Desired Outcome: ${state.desiredOutcome}
+
+STRATEGIC CONTEXT:
+- Ad Mode: ${mode.label} — ${mode.description}
+- Audience Awareness: ${stage.label} (Stage ${stage.level}) — ${stage.description}
+- Market Sophistication: ${soph.label} — ${soph.hookMod}
+- Primary Emotion to trigger: ${state.dominantEmotion}`;
+}
+
+const HUMANIZER_SHORT = `HUMANIZER RULES — non-negotiable:
+- Write like one person talking to another. No ad-speak.
+- No em dashes or en dashes anywhere. Use commas or full stops.
+- Short sentences. Specific numbers over adjectives. Names over "a client".
+- Banned words: game-changing, transform, unlock, skyrocket, journey, leverage, seamless, revolutionize, cutting-edge, elevate, empower.
+- No weak openers: "Hey guys", "Are you tired of", "Imagine if", "Did you know".
+- One CTA. Stated once, clearly.`;
+
+function buildCaptionPrompt(durId, script) {
+  const mode = AD_MODES[state.adMode];
+  const dur = AD_DURATIONS.find(d => d.id === durId);
+  const ctaHint = state.adMode === "follower"
+    ? "The only CTA is to follow the account."
+    : state.adMode === "indirect"
+      ? "The CTA sends them to claim a free resource (link or comment keyword)."
+      : "The CTA sends them to click the link to book or apply.";
+  return `You write Meta (Facebook and Instagram) ad primary text, the caption that sits above a video ad.
+
+Below is a ${dur.label} spoken-word video ad script. Write 3 different primary text options for it. Each should work with the video, not repeat it word for word, and pull the right person into watching.
+
+${audienceContext()}
+
+AD MODE CTA: ${ctaHint}
+
+THE SCRIPT:
+${script}
+
+THE THREE OPTIONS:
+CAPTION 1: Short. 1 to 2 lines. One sharp line that calls out the avatar or the pain, then the CTA. Under 30 words.
+CAPTION 2: Medium. 3 to 5 short lines, each its own paragraph. Pain, a reframe or proof point, CTA. 40 to 80 words.
+CAPTION 3: Long. A mini story or belief shift in 6 to 10 short paragraphs, finishing on the CTA. 120 to 180 words. This is the one that gets read by people who stop scrolling.
+
+${HUMANIZER_SHORT}
+- No hashtags. No emoji except at most one per caption, and only if it reads naturally.
+- Line breaks between paragraphs. No bullet points.
+- Never open with "I".
+
+Format exactly as:
+
+CAPTION 1:
+[text]
+
+CAPTION 2:
+[text]
+
+CAPTION 3:
+[text]
+
+Nothing else.`;
+}
+
+function parseCaptions(text) {
+  const parts = text.split(/CAPTION\s*\d+\s*:/i).map(p => p.trim()).filter(Boolean);
+  const out = parts.length >= 2 ? parts.slice(0, 3) : text.split(/\n\n+/).map(p => p.trim()).filter(Boolean).slice(0, 3);
+  return out.map(cleanCopy);
+}
+
+const REFINE_ANGLES = [
+  { id: "retargeting", label: "Retargeting", instruction: "Rewrite this as a retargeting ad for people who have already seen the brand or watched the previous video. Skip re-explaining who we are. Open by naming the thing stopping them from acting, dismantle it with proof, make the decision easy, and keep the same CTA." },
+  { id: "contrarian", label: "Contrarian", instruction: "Rewrite with a contrarian angle. Open by challenging a belief this avatar holds that is keeping them stuck, explain why it is wrong with a specific reason, then land the same offer and CTA." },
+  { id: "story", label: "Story-led", instruction: "Rewrite as a story. Open on a specific moment the avatar will recognise, show the before state, the turning point, the after state with real numbers, then bridge naturally to the same offer and CTA." },
+  { id: "proof", label: "Proof-heavy", instruction: "Rewrite leading with proof. Open with the strongest specific result in the content, add a second result from a different angle if available, keep the promise and risk reversal, same CTA. Numbers and names everywhere." },
+  { id: "punchier", label: "Punchier", instruction: "Keep the same structure and content but make every sentence shorter and harder. Cut every word that does not earn its place. Average sentence under 9 words. Same CTA." },
+  { id: "softer", label: "Softer CTA", instruction: "Keep the script but soften the close. Lower the stakes of the CTA, make it feel like an easy, no-pressure next step. Same destination." }
+];
+
+function buildRefinePrompt(durId, currentScript, instruction) {
+  const dur = AD_DURATIONS.find(d => d.id === durId);
+  const fw = FRAMEWORKS[state.selectedFramework];
+  return `You are an elite direct-response ad copywriter specializing in spoken-word video scripts.
+
+Below is a ${dur.label} (${dur.wordCount}) video ad script written with the ${fw.label} framework. Rewrite it according to the instruction. Keep it on strategy for the audience described. Keep the word count in range for ${dur.label}.
+
+${audienceContext()}
+
+CURRENT SCRIPT:
+${currentScript}
+
+INSTRUCTION:
+${instruction}
+
+${HUMANIZER_SHORT}
+- Write entirely for spoken delivery. Paragraph breaks for natural pauses. No bullet points.
+- End on the CTA. No summary.
+
+Output ONLY the rewritten script. No headers, no notes, no word count.`;
 }
 
 // ═══════════════════════════════════════════
@@ -1410,7 +1568,7 @@ function renderTopbar() {
   resetBtn.textContent = "Start over";
   resetBtn.addEventListener("click", () => {
     if (confirm("Start over? Your current progress will be lost.")) {
-      state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
+      state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
       render();
     }
   });
@@ -2088,46 +2246,99 @@ function renderResult() {
 
   const activeDurId = state.activeDurationTab || selectedDurs[0]?.id;
   const activeDur = AD_DURATIONS.find(d => d.id === activeDurId);
-  const activeScript = state.generatedScripts[activeDurId] || "";
+  const history = state.scriptHistory[activeDurId] || [];
+  const versionIdx = state.activeVersion[activeDurId] || 0;
+  const version = history[versionIdx] || { label: "Original", text: state.generatedScripts[activeDurId] || "", captions: [] };
+  const activeScript = version.text;
+  const busy = !!state.refineLoading[activeDurId];
+
+  // Version pills (shown once there is more than one version)
+  if (history.length > 1) {
+    const vbar = el("div", { class: "version-bar" }, el("span", { class: "version-label" }, "Versions"));
+    history.forEach((v, i) => {
+      const pill = el("button", { class: "version-pill" + (i === versionIdx ? " active" : "") }, `v${i + 1} ${v.label}`);
+      pill.addEventListener("click", () => { state.activeVersion[activeDurId] = i; state.generatedScripts[activeDurId] = history[i].text; render(); });
+      vbar.appendChild(pill);
+    });
+    wrap.appendChild(vbar);
+  }
 
   const scriptBox = el("div", { class: "script-box" });
-  const copyBtn = document.createElement("button");
-  copyBtn.className = "copy-btn" + (state.copied ? " copied" : "");
-  copyBtn.innerHTML = state.copied ? "✓ Copied" : "Copy script";
-
-  copyBtn.addEventListener("click", () => {
-    const copyText = activeScript;
-    navigator.clipboard.writeText(copyText).then(() => {
-      state.copied = true;
-      copyBtn.className = "copy-btn copied";
-      copyBtn.textContent = "✓ Copied";
-      setTimeout(() => {
-        state.copied = false;
-        copyBtn.className = "copy-btn";
-        copyBtn.textContent = "Copy script";
-      }, 2000);
-    }).catch(() => {
-      const ta = document.createElement("textarea");
-      ta.value = copyText;
-      ta.style.cssText = "position:fixed;left:-9999px;top:0;";
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand("copy"); } catch (e) {}
-      document.body.removeChild(ta);
-      state.copied = true;
-      copyBtn.textContent = "✓ Copied";
-      setTimeout(() => { state.copied = false; copyBtn.textContent = "Copy script"; }, 2000);
-    });
-  });
-
   scriptBox.appendChild(el("div", { class: "script-box-header" },
-    el("div", { class: "script-box-title" }, fw.label + (activeDur ? " · " + activeDur.label : "")),
-    copyBtn
+    el("div", { class: "script-box-title" }, fw.label + (activeDur ? " · " + activeDur.label : "") + (history.length > 1 ? " · v" + (versionIdx + 1) : "")),
+    makeCopyBtn(activeScript, "Copy script")
   ));
 
-  const body = el("div", { class: "script-box-body" }, activeScript);
-  scriptBox.appendChild(body);
+  if (busy) {
+    scriptBox.appendChild(el("div", { class: "loading-wrap", style: "min-height:160px;" },
+      el("div", { class: "spinner" }),
+      el("div", { class: "loading-msg" }, "Rewriting script and captions...")
+    ));
+  } else {
+    scriptBox.appendChild(el("div", { class: "script-box-body" }, activeScript));
+  }
   wrap.appendChild(scriptBox);
+
+  // Captions / primary text
+  if (!busy) {
+    const capWrap = el("div", { class: "captions-wrap" });
+    const capHeader = el("div", { class: "captions-header" },
+      el("div", {},
+        el("div", { class: "script-box-title" }, "Primary text · 3 options"),
+        el("div", { class: "captions-sub" }, "The caption above the video. Pick one, or test all three.")
+      )
+    );
+    capWrap.appendChild(capHeader);
+    const caps = version.captions || [];
+    if (caps.length === 0) {
+      capWrap.appendChild(el("div", { class: "captions-empty" },
+        el("span", {}, "Captions didn't come through for this version. "),
+        el("button", { class: "btn btn-ghost btn-sm", onclick: () => regenerateCaptions(activeDurId) }, "Generate captions")
+      ));
+    } else {
+      const names = ["Short", "Medium", "Long"];
+      caps.forEach((c, i) => {
+        capWrap.appendChild(el("div", { class: "caption-card" },
+          el("div", { class: "caption-card-header" },
+            el("span", { class: "caption-num" }, `${i + 1} · ${names[i] || "Option"}`),
+            makeCopyBtn(c, "Copy")
+          ),
+          el("div", { class: "caption-text" }, c)
+        ));
+      });
+    }
+    wrap.appendChild(capWrap);
+  }
+
+  // Refine panel
+  const refine = el("div", { class: "refine-wrap" });
+  refine.appendChild(el("div", { class: "script-box-title" }, "Refine this script"));
+  refine.appendChild(el("div", { class: "captions-sub", style: "margin-bottom:12px;" }, "Pick an angle, or tell it what to change. Each refinement is saved as a new version."));
+  const angleRow = el("div", { class: "angle-row" });
+  for (const a of REFINE_ANGLES) {
+    const b = el("button", { class: "angle-pill" }, a.label);
+    b.disabled = busy;
+    b.addEventListener("click", () => refineScript(activeDurId, a.instruction, a.label));
+    angleRow.appendChild(b);
+  }
+  refine.appendChild(angleRow);
+  const ta = el("textarea", { class: "niche-textarea", rows: "2", placeholder: "e.g. Make it for people who watched the VSL but didn't book. Lead with the guarantee." });
+  ta.value = state.refineText[activeDurId] || "";
+  ta.disabled = busy;
+  const goBtn = el("button", { class: "btn btn-primary btn-sm", style: "margin-top:10px;" }, "Refine →");
+  goBtn.disabled = busy || !ta.value.trim();
+  ta.addEventListener("input", () => { state.refineText[activeDurId] = ta.value; goBtn.disabled = busy || !ta.value.trim(); });
+  goBtn.addEventListener("click", () => {
+    const txt = ta.value.trim();
+    if (!txt) return;
+    refineScript(activeDurId, txt, "Custom");
+  });
+  refine.appendChild(ta);
+  refine.appendChild(goBtn);
+  if (state.refineError[activeDurId]) {
+    refine.appendChild(el("div", { class: "error-box", style: "margin-top:12px;margin-bottom:0;" }, state.refineError[activeDurId]));
+  }
+  wrap.appendChild(refine);
 
   const hookPreview = el("div", { style: "background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;" },
     el("div", { style: "font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;" }, "Hook used"),
@@ -2143,7 +2354,7 @@ function renderResult() {
     el("button", {
       class: "btn btn-primary btn-sm",
       onclick: () => {
-        state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
+        state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
         render();
       }
     }, "Build another →")
@@ -2181,17 +2392,29 @@ async function generateHooks() {
 async function generateScript() {
   state.loading = true;
   const count = state.adDurations.length;
-  state.loadingMessage = count > 1 ? `Writing ${count} scripts in parallel...` : "Writing your ad script...";
+  state.loadingMessage = count > 1 ? `Writing ${count} scripts and their captions...` : "Writing your script and captions...";
   state.apiError = "";
   state.generatedScripts = {};
+  state.scriptHistory = {};
+  state.activeVersion = {};
+  state.refineError = {};
   state.view = "result";
   render();
 
   try {
     const results = await Promise.all(
-      state.adDurations.map(durId => callAPI(buildScriptPrompt(durId), 1200).then(text => ({ durId, text: text.trim() })))
+      state.adDurations.map(async durId => {
+        const text = cleanCopy(await callAPI(buildScriptPrompt(durId), 1200));
+        let captions = [];
+        try { captions = parseCaptions(await callAPI(buildCaptionPrompt(durId, text), 900)); } catch (e) { captions = []; }
+        return { durId, text, captions };
+      })
     );
-    results.forEach(({ durId, text }) => { state.generatedScripts[durId] = text; });
+    results.forEach(({ durId, text, captions }) => {
+      state.generatedScripts[durId] = text;
+      state.scriptHistory[durId] = [{ label: "Original", text, captions }];
+      state.activeVersion[durId] = 0;
+    });
     // Set active tab to first duration in AD_DURATIONS order
     state.activeDurationTab = AD_DURATIONS.map(d => d.id).find(id => state.adDurations.includes(id));
     state.copied = false;
@@ -2204,9 +2427,80 @@ async function generateScript() {
   }
 }
 
+async function refineScript(durId, instruction, label) {
+  const history = state.scriptHistory[durId] || [];
+  const current = history[state.activeVersion[durId] || 0];
+  if (!current || !instruction.trim()) return;
+  state.refineLoading[durId] = true;
+  state.refineError[durId] = "";
+  render();
+  try {
+    const text = cleanCopy(await callAPI(buildRefinePrompt(durId, current.text, instruction), 1200));
+    let captions = [];
+    try { captions = parseCaptions(await callAPI(buildCaptionPrompt(durId, text), 900)); } catch (e) { captions = []; }
+    history.push({ label, text, captions });
+    state.scriptHistory[durId] = history;
+    state.activeVersion[durId] = history.length - 1;
+    state.generatedScripts[durId] = text;
+    state.refineText[durId] = "";
+    state.refineLoading[durId] = false;
+    render();
+  } catch (err) {
+    state.refineLoading[durId] = false;
+    state.refineError[durId] = err.message || "Something went wrong.";
+    render();
+  }
+}
+
+async function regenerateCaptions(durId) {
+  const history = state.scriptHistory[durId] || [];
+  const idx = state.activeVersion[durId] || 0;
+  const current = history[idx];
+  if (!current) return;
+  state.refineLoading[durId] = true;
+  state.refineError[durId] = "";
+  render();
+  try {
+    current.captions = parseCaptions(await callAPI(buildCaptionPrompt(durId, current.text), 900));
+    state.refineLoading[durId] = false;
+    render();
+  } catch (err) {
+    state.refineLoading[durId] = false;
+    state.refineError[durId] = err.message || "Something went wrong.";
+    render();
+  }
+}
+
 // ═══════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════
+
+function makeCopyBtn(text, label) {
+  const btn = document.createElement("button");
+  btn.className = "copy-btn";
+  btn.textContent = label;
+  const done = () => {
+    btn.className = "copy-btn copied";
+    btn.textContent = "✓ Copied";
+    setTimeout(() => { btn.className = "copy-btn"; btn.textContent = label; }, 2000);
+  };
+  btn.addEventListener("click", () => {
+    const fallback = () => {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.cssText = "position:fixed;left:-9999px;top:0;";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+      done();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else fallback();
+  });
+  return btn;
+}
 
 function escHtml(str) {
   return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
