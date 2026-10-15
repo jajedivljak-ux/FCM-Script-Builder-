@@ -6,6 +6,7 @@ import crypto from "crypto";
 // To switch someone off, delete their line and push. The change is live in about a minute.
 export const ACCESS_CODES = [
   { label: "owner", hash: "f2a00c0551b5bfbb003af0df78698528b6534a6aa02ba6962a6305a1cddca976" },
+  { label: "client-01", hash: "b7002814536d9d4990bdef14e9f0d238585b9517bdfad12e8b9e8e861593439d" },
 ];
 
 export function normaliseCode(code) {
