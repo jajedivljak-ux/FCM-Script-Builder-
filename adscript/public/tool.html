@@ -971,6 +971,14 @@ body {
 .ci-inline-load { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 13px; color: var(--text-secondary); }
 .ci-inline-load .spinner { width: 18px; height: 18px; border-width: 2px; }
 .ci-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 30px 0; }
+
+/* ── Access gate ── */
+.gate-wrap { max-width: 380px; margin: 0 auto; padding: 18vh 24px 40px; text-align: center; }
+.gate-logo { width: 52px; height: 52px; margin: 0 auto 18px; border-radius: 14px; background: var(--accent); color: #fff; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+.gate-title { font-size: 24px; font-weight: 700; margin: 0 0 8px; }
+.gate-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 24px; }
+.gate-input { width: 100%; text-align: center; letter-spacing: 0.08em; font-size: 16px; margin-bottom: 10px; }
+.gate-msg { min-height: 20px; font-size: 13px; color: #ff8080; margin-bottom: 12px; }
 </style>
 
 <div id="app"></div>
@@ -1199,13 +1207,17 @@ async function callAPI(prompt, maxTokens) {
   try {
     res = await fetch("/api/generate", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "X-Access-Code": accessCode },
       body: JSON.stringify({ prompt, maxTokens: maxTokens || 1200 })
     });
   } catch (e) {
     throw new Error("Couldn't reach the server. Check your connection and try again.");
   }
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    lockOut("Your access code is no longer active. Ask your coach for a new one.");
+    throw new Error("Your access code is no longer active.");
+  }
   if (!res.ok) throw new Error(data.error || `Server error ${res.status}. Try again in a moment.`);
   return data.text || "";
 }
@@ -1541,6 +1553,11 @@ function render() {
   const app = document.getElementById("app");
   const scrollY = window.scrollY;
   app.innerHTML = "";
+
+  if (!accessCode) {
+    app.appendChild(renderGate());
+    return;
+  }
 
   // Topbar
   const topbar = renderTopbar();
@@ -2957,6 +2974,61 @@ function renderSectionTabs() {
 }
 
 ciLoad();
+
+
+// ═══════════════════════════════════════════
+// ACCESS CODE
+// ═══════════════════════════════════════════
+
+const ACCESS_KEY = "fcm-access-code";
+let accessCode = "";
+let gateMessage = "";
+try { accessCode = localStorage.getItem(ACCESS_KEY) || ""; } catch (e) {}
+
+function lockOut(msg) {
+  accessCode = "";
+  gateMessage = msg || "";
+  try { localStorage.removeItem(ACCESS_KEY); } catch (e) {}
+  render();
+  window.scrollTo(0, 0);
+}
+
+function renderGate() {
+  const wrap = el("div", { class: "gate-wrap" });
+  wrap.appendChild(el("div", { class: "gate-logo" }, "⚡"));
+  wrap.appendChild(el("h1", { class: "gate-title" }, "FCM Script Builder"));
+  wrap.appendChild(el("p", { class: "gate-sub" }, "Enter the access code your coach gave you. You only need to do this once on each device."));
+  const input = el("input", { class: "text-input gate-input", placeholder: "FCM-XXXX-XXXX-XXXX", autocomplete: "off", autocapitalize: "characters", spellcheck: "false" });
+  const msg = el("div", { class: "gate-msg" }, gateMessage);
+  const btn = el("button", { class: "btn btn-primary btn-full" }, "Unlock");
+  async function submit() {
+    const code = input.value.trim().toUpperCase().replace(/\s+/g, "");
+    if (!code) return;
+    btn.disabled = true; btn.textContent = "Checking...";
+    msg.textContent = "";
+    try {
+      const res = await fetch("/api/check-code", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        accessCode = code; gateMessage = "";
+        try { localStorage.setItem(ACCESS_KEY, code); } catch (e) {}
+        render();
+        return;
+      }
+      msg.textContent = data.error || "That code isn't active. Check it and try again.";
+    } catch (e) {
+      msg.textContent = "Couldn't reach the server. Check your connection and try again.";
+    }
+    btn.disabled = false; btn.textContent = "Unlock";
+  }
+  btn.addEventListener("click", submit);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+  wrap.appendChild(input);
+  wrap.appendChild(msg);
+  wrap.appendChild(btn);
+  setTimeout(() => input.focus(), 0);
+  return wrap;
+}
 
 // ═══════════════════════════════════════════
 // BOOT
