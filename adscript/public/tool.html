@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@800&family=Playfair+Display:wght@700&display=swap">
 
 <style>
 :root {
@@ -972,6 +973,48 @@ body {
 .ci-inline-load .spinner { width: 18px; height: 18px; border-width: 2px; }
 .ci-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 30px 0; }
 
+
+/* ── Brand kit ── */
+.bk-preview { display: flex; justify-content: center; margin-bottom: 8px; }
+.bk-preview-img { width: 100%; max-width: 280px; aspect-ratio: 4 / 5; border-radius: 12px; border: 1px solid var(--border); background: var(--card); object-fit: cover; }
+.bk-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.bk-logo-box { height: 56px; min-width: 56px; max-width: 200px; padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: repeating-conic-gradient(#222 0 25%, #1a1a1a 0 50%) 0 0 / 14px 14px; display: flex; align-items: center; }
+.bk-logo-box img { max-height: 44px; max-width: 180px; }
+.bk-photos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.bk-photo { position: relative; aspect-ratio: 1; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); background: var(--card); }
+.bk-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bk-photo:first-child { border-color: var(--accent); }
+.bk-photo-btn { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(0,0,0,0.7); color: #fff; font-size: 15px; line-height: 1; cursor: pointer; }
+.bk-photo-btn.bk-first { right: auto; left: 4px; font-size: 12px; }
+.bk-add { display: flex; align-items: center; justify-content: center; text-align: center; font-family: inherit; font-size: 12px; color: var(--text-secondary); cursor: pointer; border-style: dashed; padding: 6px; }
+.bk-add:hover { color: var(--text); border-color: var(--accent); }
+.bk-swatch { display: inline-block; width: 16px; height: 16px; border-radius: 50%; margin-right: 7px; vertical-align: -3px; border: 1px solid rgba(255,255,255,0.25); }
+.bk-pickers { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.bk-picker { display: flex; align-items: center; gap: 8px; background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px 6px 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+.bk-color { width: 34px; height: 34px; border: none; padding: 0; background: none; cursor: pointer; }
+.bk-styles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.bk-style { border-radius: var(--radius-sm); padding: 14px; }
+.bk-style-sample { display: block; font-size: 20px; color: var(--text); line-height: 1.2; }
+.bk-nudge { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: var(--accent-dim); border: 1px solid var(--accent); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; color: var(--text); }
+@media (max-width: 620px) { .bk-photos { grid-template-columns: repeat(3, 1fr); } }
+
+/* ── Carousel builder ── */
+.car-strip { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 14px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.car-thumb-wrap { position: relative; flex: 0 0 auto; scroll-snap-align: start; }
+.car-thumb { width: 200px; aspect-ratio: 4 / 5; border-radius: 10px; border: 2px solid transparent; background: var(--card); display: block; cursor: pointer; object-fit: cover; }
+.car-thumb.active { border-color: var(--accent); }
+.car-thumb-num { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.65); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.car-editor { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px 18px; }
+.car-editor .niche-label { margin-bottom: 6px; display: block; }
+.car-photo-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.car-photo-opt { flex: 0 0 auto; width: 56px; height: 56px; border-radius: var(--radius-sm); border: 2px solid var(--border); background: var(--elevated); padding: 0; overflow: hidden; cursor: pointer; font-family: inherit; font-size: 11px; color: var(--text-secondary); }
+.car-photo-opt img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.car-photo-opt.on { border-color: var(--accent); }
+.car-caption { resize: vertical; }
+.car-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.car-actions-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+@media (max-width: 620px) { .car-thumb { width: 64vw; } }
+
 /* ── Access gate ── */
 .gate-wrap { max-width: 380px; margin: 0 auto; padding: 18vh 24px 40px; text-align: center; }
 .gate-logo { width: 52px; height: 52px; margin: 0 auto 18px; border-radius: 14px; background: var(--accent); color: #fff; font-size: 24px; display: flex; align-items: center; justify-content: center; }
@@ -1569,7 +1612,8 @@ function render() {
   main.className = "main";
 
   if (state.section === "content") {
-    main.appendChild(cstate.view === "ideas" ? renderContentIdeas() : renderContentSetup());
+    const cviews = { ideas: renderContentIdeas, brand: renderBrandKit, carousel: renderCarouselView };
+    main.appendChild((cviews[cstate.view] || renderContentSetup)());
     app.appendChild(main);
     window.scrollTo(0, scrollY);
     return;
@@ -2617,7 +2661,7 @@ let ciNextId = 1;
 
 function ciSave() {
   try {
-    const ideas = cstate.ideas.map(i => ({ ...i, scriptLoading: false, scriptError: "" }));
+    const ideas = cstate.ideas.map(i => ({ ...i, scriptLoading: false, scriptError: "", carouselLoading: false, carouselError: "" }));
     const { loading, error, ...rest } = cstate;
     localStorage.setItem(CI_STORE_KEY, JSON.stringify({ ...rest, ideas }));
   } catch (e) {}
@@ -2868,6 +2912,7 @@ function renderContentIdeas() {
   const bar = el("div", { class: "ci-toolbar" },
     el("button", { class: "btn btn-primary btn-sm", onclick: generateIdeas, ...(cstate.loading ? { disabled: "true" } : {}) }, "+ 10 more ideas"),
     el("button", { class: "btn btn-ghost btn-sm", onclick: () => { cstate.view = "setup"; render(); window.scrollTo(0, 0); } }, "Edit my info"),
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => { cstate.brandReturn = "ideas"; cstate.view = "brand"; render(); window.scrollTo(0, 0); } }, "Brand kit"),
     el("div", { class: "spacer" })
   );
   if (cstate.ideas.length) {
@@ -2938,6 +2983,14 @@ function renderIdeaCard(idea, n) {
   if (!idea.script && !idea.scriptLoading) {
     actions.appendChild(el("button", { class: "btn btn-secondary btn-sm", onclick: () => generateIdeaScript(idea.id) }, "Write full script"));
   }
+  const isCarousel = /carousel/i.test(idea.format || "");
+  if (idea.carousel) {
+    actions.appendChild(el("button", { class: "btn btn-primary btn-sm", onclick: () => openCarousel(idea.id) }, "Open carousel"));
+  } else if (isCarousel) {
+    actions.appendChild(el("button", { class: "btn btn-primary btn-sm", onclick: () => openCarousel(idea.id) }, "Build carousel"));
+  } else {
+    actions.appendChild(el("button", { class: "copy-btn", onclick: () => openCarousel(idea.id) }, "Make it a carousel"));
+  }
   actions.appendChild(makeCopyBtn(ideaAsText(idea), "Copy idea"));
   actions.appendChild(el("button", { class: "copy-btn", onclick: () => {
     cstate.ideas = cstate.ideas.filter(i => i.id !== idea.id); ciSave(); render();
@@ -2975,6 +3028,767 @@ function renderSectionTabs() {
 
 ciLoad();
 
+
+
+// ═══════════════════════════════════════════
+// BRAND KIT + CAROUSEL BUILDER
+// Slides are drawn in the browser. Photos and logos never leave the device.
+// ═══════════════════════════════════════════
+
+const SLIDE_W = 1080, SLIDE_H = 1350, SLIDE_PAD = 96;
+
+const BRAND_PRESETS = [
+  { id: "dark", label: "Dark + orange", bg: "#111111", text: "#ffffff", primary: "#ff6a1f" },
+  { id: "light", label: "White + black", bg: "#ffffff", text: "#111111", primary: "#111111" },
+  { id: "navy", label: "Navy + gold", bg: "#0f1b33", text: "#ffffff", primary: "#e7b54a" },
+  { id: "cream", label: "Cream + green", bg: "#f4efe6", text: "#1d2a22", primary: "#2f6b4f" },
+  { id: "blush", label: "Blush + plum", bg: "#f7e8e4", text: "#2b1a24", primary: "#8a2d5a" },
+  { id: "black", label: "Black + lime", bg: "#0b0b0b", text: "#f2f2f2", primary: "#c6f432" }
+];
+
+const SLIDE_STYLES = [
+  { id: "clean", label: "Clean", head: "Montserrat", headWeight: 800, upper: false, sample: "Clean and modern" },
+  { id: "bold", label: "Bold", head: "Bebas Neue", headWeight: 400, upper: true, sample: "BIG AND LOUD" },
+  { id: "editorial", label: "Editorial", head: "Playfair Display", headWeight: 700, upper: false, sample: "Classy and calm" },
+  { id: "minimal", label: "Minimal", head: "Inter", headWeight: 700, upper: false, sample: "Simple and quiet" }
+];
+
+let brand = { handle: "", logo: "", photos: [], preset: "dark", bg: "#111111", text: "#ffffff", primary: "#ff6a1f", style: "clean" };
+let brandLoaded = false;
+
+// ── Device storage (IndexedDB holds the images, localStorage is too small) ──
+const BrandStore = {
+  db: null,
+  open() {
+    if (this.db) return Promise.resolve(this.db);
+    return new Promise((resolve, reject) => {
+      try {
+        const req = indexedDB.open("fcm-brand-kit", 1);
+        req.onupgradeneeded = () => req.result.createObjectStore("kv");
+        req.onsuccess = () => { this.db = req.result; resolve(this.db); };
+        req.onerror = () => reject(req.error);
+      } catch (e) { reject(e); }
+    });
+  },
+  async get(key) {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const r = db.transaction("kv").objectStore("kv").get(key);
+      r.onsuccess = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+    });
+  },
+  async set(key, val) {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("kv", "readwrite");
+      tx.objectStore("kv").put(val, key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+};
+
+let brandSaveTimer = null;
+function saveBrand() {
+  clearTimeout(brandSaveTimer);
+  brandSaveTimer = setTimeout(() => { BrandStore.set("brand", brand).catch(() => {}); }, 250);
+}
+
+async function loadBrand() {
+  try {
+    const saved = await BrandStore.get("brand");
+    if (saved) brand = { ...brand, ...saved };
+  } catch (e) {}
+  brandLoaded = true;
+}
+
+function brandIsEmpty() {
+  return !brand.logo && !brand.photos.length && !brand.handle;
+}
+
+// Shrink uploads so storage stays small and slides draw fast.
+function fileToDataURL(file, maxSide, keepAlpha) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * scale);
+      c.height = Math.round(img.height * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(keepAlpha ? c.toDataURL("image/png") : c.toDataURL("image/jpeg", 0.86));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("That image couldn't be opened. Try a JPG or PNG.")); };
+    img.src = url;
+  });
+}
+
+const imageCache = new Map();
+function loadImage(src) {
+  if (!src) return Promise.resolve(null);
+  if (imageCache.has(src)) return imageCache.get(src);
+  const p = new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+  imageCache.set(src, p);
+  return p;
+}
+
+let fontsReady = null;
+function ensureFonts() {
+  if (!fontsReady) {
+    const loads = [];
+    for (const s of SLIDE_STYLES) loads.push(`${s.headWeight} 80px "${s.head}"`);
+    loads.push(`400 40px "Inter"`, `600 40px "Inter"`, `700 40px "Inter"`);
+    fontsReady = Promise.all(loads.map(f => document.fonts ? document.fonts.load(f).catch(() => {}) : null))
+      .then(() => new Promise(r => setTimeout(r, 50)));
+  }
+  return fontsReady;
+}
+
+// ── Drawing helpers ──
+function hexToRgb(hex) {
+  const h = String(hex || "#000").replace("#", "");
+  const n = parseInt(h.length === 3 ? h.split("").map(c => c + c).join("") : h, 16) || 0;
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function richWords(text, upper) {
+  // *word* marks a highlighted word.
+  const out = [];
+  let hl = false;
+  for (let raw of String(text || "").split(/\s+/).filter(Boolean)) {
+    if (upper) raw = raw.toUpperCase();
+    let on = hl;
+    if (raw.startsWith("*")) { on = true; raw = raw.slice(1); hl = true; }
+    if (raw.endsWith("*")) { raw = raw.slice(0, -1); hl = false; }
+    else if (raw.includes("*")) { raw = raw.replace(/\*/g, ""); hl = false; }
+    if (raw) out.push({ w: raw, hl: on });
+  }
+  return out;
+}
+
+function wrapWords(ctx, words, maxW) {
+  const lines = [];
+  let line = [];
+  let width = 0;
+  const space = ctx.measureText(" ").width;
+  for (const word of words) {
+    const ww = ctx.measureText(word.w).width;
+    if (line.length && width + space + ww > maxW) {
+      lines.push(line); line = []; width = 0;
+    }
+    width += (line.length ? space : 0) + ww;
+    line.push(word);
+  }
+  if (line.length) lines.push(line);
+  return lines;
+}
+
+function fitRich(ctx, words, fontFor, maxW, maxH, start, min, lh) {
+  let size = start;
+  let lines;
+  while (true) {
+    ctx.font = fontFor(size);
+    lines = wrapWords(ctx, words, maxW);
+    const tooWide = lines.some(l => ctx.measureText(l.map(w => w.w).join(" ")).width > maxW);
+    if ((lines.length * size * lh <= maxH && !tooWide) || size <= min) break;
+    size -= 4;
+  }
+  return { size, lines, height: lines.length * size * lh };
+}
+
+function drawRichLines(ctx, fit, x, y, lh, color, hlColor) {
+  const space = ctx.measureText(" ").width;
+  fit.lines.forEach((line, i) => {
+    let cx = x;
+    const ly = y + i * fit.size * lh;
+    for (const word of line) {
+      ctx.fillStyle = word.hl ? hlColor : color;
+      ctx.fillText(word.w, cx, ly);
+      cx += ctx.measureText(word.w).width + space;
+    }
+  });
+}
+
+function drawCover(ctx, img, x, y, w, h) {
+  const s = Math.max(w / img.width, h / img.height);
+  const sw = w / s, sh = h / s;
+  ctx.drawImage(img, (img.width - sw) / 2, (img.height - sh) / 3, sw, sh, x, y, w, h);
+}
+
+function readableOn(bgHex) {
+  const [r, g, b] = hexToRgb(bgHex);
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? "#111111" : "#ffffff";
+}
+
+// Draws one slide onto a 1080x1350 canvas (Instagram portrait size).
+async function drawSlide(slide, index, total, kit) {
+  await ensureFonts();
+  const style = SLIDE_STYLES.find(s => s.id === kit.style) || SLIDE_STYLES[0];
+  const c = document.createElement("canvas");
+  c.width = SLIDE_W; c.height = SLIDE_H;
+  const ctx = c.getContext("2d");
+  ctx.textBaseline = "top";
+  const isCover = index === 0;
+  const isLast = index === total - 1 && total > 1;
+  const photo = slide.photo != null && kit.photos[slide.photo] ? await loadImage(kit.photos[slide.photo]) : null;
+  const logo = kit.logo ? await loadImage(kit.logo) : null;
+  const [br, bgG, bb] = hexToRgb(kit.bg);
+  const maxW = SLIDE_W - SLIDE_PAD * 2;
+  const headFont = size => `${style.headWeight} ${size}px "${style.head}", "Inter", sans-serif`;
+  const bodyFont = size => `400 ${size}px "Inter", sans-serif`;
+  const headLH = style.id === "bold" ? 0.98 : 1.12;
+
+  // Background
+  ctx.fillStyle = kit.bg;
+  ctx.fillRect(0, 0, SLIDE_W, SLIDE_H);
+
+  let textColor = kit.text;
+  let onAccent = false;
+  let footerTop = SLIDE_H - SLIDE_PAD - 64;
+
+  if (photo && (isCover || isLast)) {
+    // Full-bleed photo, fading into the brand background at the bottom.
+    drawCover(ctx, photo, 0, 0, SLIDE_W, SLIDE_H);
+    const g = ctx.createLinearGradient(0, SLIDE_H * 0.25, 0, SLIDE_H);
+    g.addColorStop(0, `rgba(${br},${bgG},${bb},0)`);
+    g.addColorStop(0.55, `rgba(${br},${bgG},${bb},0.82)`);
+    g.addColorStop(1, `rgba(${br},${bgG},${bb},0.97)`);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, SLIDE_W, SLIDE_H);
+  } else if (photo) {
+    // Content slide with a photo: photo panel at the top.
+    const ph = Math.round(SLIDE_H * 0.42);
+    ctx.save();
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(SLIDE_PAD, SLIDE_PAD + 70, maxW, ph, 28); else ctx.rect(SLIDE_PAD, SLIDE_PAD + 70, maxW, ph);
+    ctx.clip();
+    drawCover(ctx, photo, SLIDE_PAD, SLIDE_PAD + 70, maxW, ph);
+    ctx.restore();
+  } else if (isCover && style.id === "bold") {
+    ctx.fillStyle = kit.primary;
+    ctx.fillRect(0, 0, SLIDE_W, SLIDE_H);
+    textColor = readableOn(kit.primary);
+    onAccent = true;
+  }
+
+  const hlColor = onAccent ? textColor : kit.primary;
+  const headWords = richWords(slide.headline, style.upper);
+  const bodyText = String(slide.body || "").replace(/\*/g, "");
+
+  // Slide counter
+  ctx.font = `600 30px "Inter", sans-serif`;
+  ctx.fillStyle = textColor;
+  ctx.globalAlpha = 0.6;
+  if (!isCover) ctx.fillText(`${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`, SLIDE_PAD, SLIDE_PAD);
+  ctx.globalAlpha = 1;
+
+  if (isCover || isLast) {
+    // Big text, anchored low on photo slides and centred otherwise.
+    const head = fitRich(ctx, headWords, headFont, maxW, isCover ? 620 : 520, isCover ? 132 : 104, 56, headLH);
+    let body = null;
+    if (bodyText) {
+      ctx.font = bodyFont(42);
+      body = { lines: wrapWords(ctx, richWords(bodyText), maxW), size: 42 };
+    }
+    const bodyH = body ? body.lines.length * body.size * 1.4 + 36 : 0;
+    const blockH = 34 + head.height + bodyH;
+    const top = photo ? footerTop - 60 - blockH : Math.max(SLIDE_PAD + 80, (SLIDE_H - blockH) / 2 - 40);
+    ctx.fillStyle = hlColor;
+    ctx.fillRect(SLIDE_PAD, top, 90, 12);
+    ctx.font = headFont(head.size);
+    drawRichLines(ctx, head, SLIDE_PAD, top + 34, headLH, textColor, hlColor);
+    if (body) {
+      ctx.font = bodyFont(body.size);
+      ctx.globalAlpha = 0.88;
+      body.lines.forEach((l, i) => { ctx.fillStyle = textColor; ctx.fillText(l.map(w => w.w).join(" "), SLIDE_PAD, top + 34 + head.height + 36 + i * body.size * 1.4); });
+      ctx.globalAlpha = 1;
+    }
+  } else {
+    const minTop = photo ? SLIDE_PAD + 70 + Math.round(SLIDE_H * 0.42) + 56 : SLIDE_PAD + 120;
+    const avail = footerTop - 50 - minTop;
+    const head = fitRich(ctx, headWords, headFont, maxW, Math.min(avail * 0.55, photo ? 300 : 480), photo ? 84 : 108, 48, headLH);
+    let body = null;
+    if (bodyText) body = fitRich(ctx, richWords(bodyText), bodyFont, maxW, avail - head.height - 44, photo ? 44 : 52, 28, 1.42);
+    const blockH = head.height + (body ? 44 + body.height : 0);
+    // Text-only slides sit in the visual centre instead of hugging the top.
+    const top = photo ? minTop : Math.max(minTop, minTop + (avail - blockH) / 2 - 40);
+    ctx.fillStyle = hlColor;
+    if (!photo) ctx.fillRect(SLIDE_PAD, top - 40, 70, 10);
+    ctx.font = headFont(head.size);
+    drawRichLines(ctx, head, SLIDE_PAD, top, headLH, textColor, hlColor);
+    if (body) {
+      ctx.font = bodyFont(body.size);
+      ctx.globalAlpha = 0.85;
+      drawRichLines(ctx, body, SLIDE_PAD, top + head.height + 44, 1.42, textColor, textColor);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // Footer: logo or handle on the left, swipe cue on the right.
+  if (logo) {
+    const sc = Math.min(64 / logo.height, 280 / logo.width);
+    const dw = logo.width * sc, dh = logo.height * sc;
+    ctx.drawImage(logo, SLIDE_PAD, footerTop + (64 - dh) / 2, dw, dh);
+  } else if (kit.handle) {
+    ctx.font = `600 32px "Inter", sans-serif`;
+    ctx.fillStyle = textColor;
+    ctx.fillText(kit.handle.startsWith("@") ? kit.handle : "@" + kit.handle, SLIDE_PAD, footerTop + 16);
+  }
+  if (logo && kit.handle) {
+    ctx.font = `600 30px "Inter", sans-serif`;
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = 0.75;
+    const h = kit.handle.startsWith("@") ? kit.handle : "@" + kit.handle;
+    if (isLast || total === 1) ctx.fillText(h, SLIDE_W - SLIDE_PAD - ctx.measureText(h).width, footerTop + 17);
+    ctx.globalAlpha = 1;
+  }
+  if (!isLast && total > 1) {
+    ctx.font = `600 30px "Inter", sans-serif`;
+    const t = "Swipe  →";
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = 0.8;
+    ctx.fillText(t, SLIDE_W - SLIDE_PAD - ctx.measureText(t).width, footerTop + 17);
+    ctx.globalAlpha = 1;
+  }
+  return c;
+}
+
+function canvasToBlob(c, type, q) {
+  return new Promise(resolve => c.toBlob(b => resolve(b), type || "image/png", q));
+}
+
+// ── Tiny ZIP writer (no compression, PNGs are already compressed) ──
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(bytes) {
+  let c = 0xffffffff;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+function makeZip(files) {
+  const enc = new TextEncoder();
+  const parts = [];
+  const central = [];
+  let offset = 0;
+  for (const f of files) {
+    const name = enc.encode(f.name);
+    const crc = crc32(f.data);
+    const local = new DataView(new ArrayBuffer(30));
+    local.setUint32(0, 0x04034b50, true); local.setUint16(4, 20, true);
+    local.setUint16(8, 0, true); local.setUint16(12, 33, true);
+    local.setUint32(14, crc, true); local.setUint32(18, f.data.length, true); local.setUint32(22, f.data.length, true);
+    local.setUint16(26, name.length, true);
+    parts.push(local, name, f.data);
+    const cd = new DataView(new ArrayBuffer(46));
+    cd.setUint32(0, 0x02014b50, true); cd.setUint16(4, 20, true); cd.setUint16(6, 20, true);
+    cd.setUint16(14, 33, true);
+    cd.setUint32(16, crc, true); cd.setUint32(20, f.data.length, true); cd.setUint32(24, f.data.length, true);
+    cd.setUint16(28, name.length, true); cd.setUint32(42, offset, true);
+    central.push(cd, name);
+    offset += 30 + name.length + f.data.length;
+  }
+  const cdSize = central.reduce((s, p) => s + p.byteLength, 0);
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true);
+  end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+  end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+  return new Blob([...parts, ...central, end], { type: "application/zip" });
+}
+
+function slugify(s) {
+  return String(s || "carousel").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "carousel";
+}
+
+function downloadBlob(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+
+async function carouselFiles(idea) {
+  const car = idea.carousel;
+  const files = [];
+  for (let i = 0; i < car.slides.length; i++) {
+    const c = await drawSlide(car.slides[i], i, car.slides.length, brand);
+    const blob = await canvasToBlob(c, "image/png");
+    files.push(new File([blob], `slide-${String(i + 1).padStart(2, "0")}.png`, { type: "image/png" }));
+  }
+  return files;
+}
+
+async function downloadCarouselZip(idea, btn) {
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = "Preparing...";
+  try {
+    const files = await carouselFiles(idea);
+    const zipFiles = [];
+    for (const f of files) zipFiles.push({ name: f.name, data: new Uint8Array(await f.arrayBuffer()) });
+    zipFiles.push({ name: "caption.txt", data: new TextEncoder().encode(idea.carousel.caption || "") });
+    downloadBlob(makeZip(zipFiles), slugify(idea.title) + ".zip");
+  } catch (e) {
+    alert("The download didn't work. Try again.");
+  }
+  btn.disabled = false; btn.textContent = label;
+}
+
+async function shareCarousel(idea, btn) {
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = "Preparing...";
+  try {
+    const files = await carouselFiles(idea);
+    await navigator.share({ files, title: idea.title });
+  } catch (e) {
+    if (e && e.name !== "AbortError") alert("Saving didn't work on this device. Use Download instead.");
+  }
+  btn.disabled = false; btn.textContent = label;
+}
+
+function canShareFiles() {
+  try {
+    return !!(navigator.canShare && navigator.canShare({ files: [new File([new Blob(["x"])], "x.png", { type: "image/png" })] }));
+  } catch (e) { return false; }
+}
+
+// ── AI: write the slides ──
+function buildCarouselPrompt(idea) {
+  return `You write Instagram carousels for coaches and service businesses. Each slide is read in about 3 seconds, so every slide makes one point.
+
+${ciContext()}
+
+THE IDEA:
+- Title: ${idea.title}
+- Pillar: ${idea.pillar}
+- Funnel stage: ${idea.stage}
+- Hook: ${idea.hook}
+- Angle: ${idea.angle}
+- CTA: ${idea.cta}
+
+TASK: Write a 6 to 8 slide carousel and its caption.
+
+RULES:
+- Slide 1 is the cover. Its headline is the hook, tightened to 12 words or fewer. Body is empty or under 10 words.
+- Middle slides: one point each. Headline 8 words or fewer. Body 30 words or fewer, plain and specific.
+- Last slide is the CTA: headline is the action, body says what they get.
+- In every headline, wrap the 1 or 2 most important words in *asterisks* so they can be highlighted.
+- Never invent numbers, names or results. Use [their detail] where the creator must fill something in.
+- The caption is 3 to 6 short sentences, ends with the CTA, and has no hashtags.
+
+${HUMANIZER_SHORT}
+
+OUTPUT: Return only JSON, no other text:
+{"slides": [{"headline": "...", "body": "..."}], "caption": "..."}`;
+}
+
+function parseCarousel(text) {
+  const start = text.indexOf("{"), end = text.lastIndexOf("}");
+  if (start === -1 || end <= start) throw new Error("The carousel came back in the wrong format. Try again.");
+  let obj;
+  try { obj = JSON.parse(text.slice(start, end + 1)); } catch (e) { throw new Error("The carousel came back in the wrong format. Try again."); }
+  const slides = (obj.slides || []).filter(s => s && s.headline).slice(0, 10).map(s => ({
+    headline: cleanCopy(s.headline),
+    body: cleanCopy(s.body || ""),
+    photo: null
+  }));
+  if (slides.length < 2) throw new Error("The carousel came back too short. Try again.");
+  return { slides, caption: cleanCopy(obj.caption || "") };
+}
+
+function assignPhotos(car) {
+  const n = brand.photos.length;
+  car.slides.forEach(s => { s.photo = null; });
+  if (!n) return;
+  car.slides[0].photo = 0;
+  if (car.slides.length > 2) car.slides[car.slides.length - 1].photo = n > 1 ? 1 : 0;
+  if (n > 2 && car.slides.length > 4) car.slides[Math.floor(car.slides.length / 2)].photo = 2;
+}
+
+async function generateCarousel(id) {
+  const idea = cstate.ideas.find(i => i.id === id);
+  if (!idea) return;
+  idea.carouselLoading = true;
+  idea.carouselError = "";
+  render();
+  try {
+    const text = await callAPI(buildCarouselPrompt(idea), 2200);
+    const car = parseCarousel(text);
+    assignPhotos(car);
+    idea.carousel = car;
+    cstate.carouselSlide = 0;
+  } catch (e) {
+    idea.carouselError = e.message || "Something went wrong. Try again.";
+  }
+  idea.carouselLoading = false;
+  ciSave();
+  render();
+}
+
+function openCarousel(id) {
+  const idea = cstate.ideas.find(i => i.id === id);
+  if (!idea) return;
+  cstate.view = "carousel";
+  cstate.carouselId = id;
+  cstate.carouselSlide = 0;
+  render();
+  window.scrollTo(0, 0);
+  if (!idea.carousel && !idea.carouselLoading) generateCarousel(id);
+}
+
+// ── VIEW: Brand kit ──
+function renderBrandKit() {
+  const wrap = document.createElement("div");
+  const back = cstate.brandReturn || "ideas";
+  wrap.appendChild(el("button", { class: "btn btn-ghost btn-sm", style: { marginBottom: "20px" }, onclick: () => { cstate.view = back; render(); window.scrollTo(0, 0); } }, back === "carousel" ? "← Back to carousel" : "← Back"));
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Brand kit"),
+    el("h1", { class: "view-title" }, "Make the slides look like you."),
+    el("p", { class: "view-desc" }, "Add your photos, logo and colours once. Every carousel uses them. They stay on this device and are never uploaded.")
+  ));
+
+  const preview = el("div", { class: "bk-preview" });
+  const previewImg = el("img", { class: "bk-preview-img", alt: "Sample slide" });
+  preview.appendChild(previewImg);
+  let pvTimer;
+  const refreshPreview = () => {
+    clearTimeout(pvTimer);
+    pvTimer = setTimeout(async () => {
+      const sample = { headline: "Your hook goes *right here*", body: "This is how your slides will look.", photo: brand.photos.length ? 0 : null };
+      const c = await drawSlide(sample, 0, 6, brand);
+      previewImg.src = c.toDataURL("image/jpeg", 0.8);
+    }, 120);
+  };
+  wrap.appendChild(preview);
+
+  // Handle
+  const hGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, "Your handle"), el("p", { class: "ci-group-hint" }, "Shown on the slides, e.g. @yourname"));
+  const hInput = el("input", { class: "text-input", placeholder: "@yourhandle", autocapitalize: "off", spellcheck: "false" });
+  hInput.value = brand.handle || "";
+  hInput.addEventListener("input", () => { brand.handle = hInput.value.trim(); saveBrand(); refreshPreview(); });
+  hGroup.appendChild(hInput);
+  wrap.appendChild(hGroup);
+
+  // Logo
+  const lGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, "Logo"), el("p", { class: "ci-group-hint" }, "A PNG with a see-through background looks best."));
+  const lRow = el("div", { class: "bk-row" });
+  if (brand.logo) {
+    lRow.appendChild(el("div", { class: "bk-logo-box" }, el("img", { src: brand.logo, alt: "Logo" })));
+    lRow.appendChild(el("button", { class: "copy-btn", onclick: () => { brand.logo = ""; saveBrand(); render(); } }, "Remove"));
+  }
+  const lInput = el("input", { type: "file", accept: "image/*", style: { display: "none" } });
+  lInput.addEventListener("change", async () => {
+    const f = lInput.files[0];
+    if (!f) return;
+    try { brand.logo = await fileToDataURL(f, 600, true); saveBrand(); render(); } catch (e) { alert(e.message); }
+  });
+  lRow.appendChild(el("button", { class: "btn btn-secondary btn-sm", onclick: () => lInput.click() }, brand.logo ? "Change logo" : "Upload logo"));
+  lRow.appendChild(lInput);
+  lGroup.appendChild(lRow);
+  wrap.appendChild(lGroup);
+
+  // Photos
+  const pGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, `Photos of you (${brand.photos.length} of 12)`), el("p", { class: "ci-group-hint" }, "Training, coaching, lifestyle, headshots. The first one is used on cover slides."));
+  const grid = el("div", { class: "bk-photos" });
+  brand.photos.forEach((src, i) => {
+    const cell = el("div", { class: "bk-photo" }, el("img", { src, alt: `Photo ${i + 1}` }));
+    if (i > 0) cell.appendChild(el("button", { class: "bk-photo-btn bk-first", title: "Make this the cover photo", onclick: () => {
+      const [p] = brand.photos.splice(i, 1); brand.photos.unshift(p); saveBrand(); render();
+    } }, "★"));
+    cell.appendChild(el("button", { class: "bk-photo-btn", title: "Remove", onclick: () => {
+      brand.photos.splice(i, 1); saveBrand(); render();
+    } }, "×"));
+    grid.appendChild(cell);
+  });
+  const pInput = el("input", { type: "file", accept: "image/*", multiple: "true", style: { display: "none" } });
+  pInput.addEventListener("change", async () => {
+    const files = Array.from(pInput.files || []).slice(0, 12 - brand.photos.length);
+    for (const f of files) {
+      try { brand.photos.push(await fileToDataURL(f, 1600, false)); } catch (e) {}
+    }
+    saveBrand(); render();
+  });
+  if (brand.photos.length < 12) grid.appendChild(el("button", { class: "bk-photo bk-add", onclick: () => pInput.click() }, "+ Add photos"));
+  pGroup.appendChild(grid);
+  pGroup.appendChild(pInput);
+  wrap.appendChild(pGroup);
+
+  // Colours
+  const cGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, "Colours"), el("p", { class: "ci-group-hint" }, "Pick a starting point, then fine-tune your exact brand colours."));
+  const presets = el("div", { class: "ci-pills" });
+  for (const p of BRAND_PRESETS) {
+    const on = brand.preset === p.id;
+    const sw = el("span", { class: "bk-swatch", style: { background: `linear-gradient(135deg, ${p.bg} 55%, ${p.primary} 55%)` } });
+    presets.appendChild(el("button", { class: "ci-pill" + (on ? " on" : ""), onclick: () => {
+      brand.preset = p.id; brand.bg = p.bg; brand.text = p.text; brand.primary = p.primary; saveBrand(); render();
+    } }, sw, p.label));
+  }
+  cGroup.appendChild(presets);
+  const pickers = el("div", { class: "bk-pickers" });
+  for (const [key, label] of [["bg", "Background"], ["text", "Text"], ["primary", "Highlight"]]) {
+    const inp = el("input", { type: "color", class: "bk-color" });
+    inp.value = brand[key];
+    inp.addEventListener("input", () => { brand[key] = inp.value; brand.preset = "custom"; saveBrand(); refreshPreview(); });
+    pickers.appendChild(el("label", { class: "bk-picker" }, inp, el("span", {}, label)));
+  }
+  cGroup.appendChild(pickers);
+  wrap.appendChild(cGroup);
+
+  // Style
+  const sGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, "Slide style"), el("p", { class: "ci-group-hint" }, "Sets the headline font and the feel of the slides."));
+  const styles = el("div", { class: "bk-styles" });
+  for (const s of SLIDE_STYLES) {
+    styles.appendChild(el("button", { class: "ci-pill bk-style" + (brand.style === s.id ? " on" : ""), onclick: () => { brand.style = s.id; saveBrand(); render(); } },
+      el("span", { class: "bk-style-sample", style: { fontFamily: `"${s.head}", Inter, sans-serif`, fontWeight: String(s.headWeight) } }, s.sample),
+      el("small", {}, s.label)));
+  }
+  sGroup.appendChild(styles);
+  wrap.appendChild(sGroup);
+
+  wrap.appendChild(el("button", { class: "btn btn-primary btn-full", style: { marginTop: "32px" }, onclick: () => { cstate.view = back; render(); window.scrollTo(0, 0); } }, "Done"));
+  refreshPreview();
+  return wrap;
+}
+
+// ── VIEW: Carousel builder ──
+function renderCarouselView() {
+  const idea = cstate.ideas.find(i => i.id === cstate.carouselId);
+  const wrap = document.createElement("div");
+  wrap.appendChild(el("button", { class: "btn btn-ghost btn-sm", style: { marginBottom: "20px" }, onclick: () => { cstate.view = "ideas"; render(); } }, "← Back to ideas"));
+  if (!idea) { wrap.appendChild(el("div", { class: "ci-empty" }, "That idea isn't there anymore.")); return wrap; }
+
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Carousel"),
+    el("h1", { class: "view-title" }, idea.title || "Your carousel"),
+    el("p", { class: "view-desc" }, idea.hook)
+  ));
+
+  if (brandIsEmpty()) {
+    wrap.appendChild(el("div", { class: "bk-nudge" },
+      el("span", {}, "Add your photos, logo and colours so the slides look like your brand."),
+      el("button", { class: "btn btn-secondary btn-sm", onclick: () => { cstate.brandReturn = "carousel"; cstate.view = "brand"; render(); window.scrollTo(0, 0); } }, "Set up brand kit")
+    ));
+  }
+
+  if (idea.carouselLoading) {
+    wrap.appendChild(el("div", { class: "loading-wrap" }, el("div", { class: "spinner" }), el("div", { class: "loading-msg" }, "Writing your slides...")));
+    return wrap;
+  }
+  if (idea.carouselError) {
+    wrap.appendChild(el("div", { class: "error-box" }, idea.carouselError));
+    wrap.appendChild(el("button", { class: "btn btn-primary", onclick: () => generateCarousel(idea.id) }, "Try again"));
+    return wrap;
+  }
+  const car = idea.carousel;
+  if (!car) return wrap;
+  const total = car.slides.length;
+  if (cstate.carouselSlide >= total) cstate.carouselSlide = total - 1;
+
+  // Slide strip
+  const strip = el("div", { class: "car-strip" });
+  const thumbs = [];
+  car.slides.forEach((s, i) => {
+    const img = el("img", { class: "car-thumb" + (i === cstate.carouselSlide ? " active" : ""), alt: `Slide ${i + 1}` });
+    img.addEventListener("click", () => { cstate.carouselSlide = i; render(); });
+    thumbs.push(img);
+    strip.appendChild(el("div", { class: "car-thumb-wrap" }, img, el("span", { class: "car-thumb-num" }, String(i + 1))));
+  });
+  wrap.appendChild(strip);
+  const paint = async i => {
+    const c = await drawSlide(car.slides[i], i, total, brand);
+    if (thumbs[i]) thumbs[i].src = c.toDataURL("image/jpeg", 0.82);
+  };
+  (async () => { for (let i = 0; i < total; i++) await paint(i); })();
+  setTimeout(() => {
+    const w = thumbs[cstate.carouselSlide] && thumbs[cstate.carouselSlide].parentNode;
+    if (w) strip.scrollLeft = Math.max(0, w.offsetLeft - strip.offsetLeft - 16);
+  }, 0);
+
+  // Editor for the selected slide
+  const idx = cstate.carouselSlide;
+  const slide = car.slides[idx];
+  const ed = el("div", { class: "car-editor" });
+  ed.appendChild(el("div", { class: "ci-group-title" }, `Editing slide ${idx + 1} of ${total}`));
+  ed.appendChild(el("p", { class: "ci-group-hint" }, "Wrap a word in *stars* to highlight it."));
+  let t;
+  const repaint = () => { clearTimeout(t); t = setTimeout(() => { paint(idx); ciSave(); }, 250); };
+  const hTa = el("textarea", { class: "niche-textarea", rows: "2" });
+  hTa.value = slide.headline;
+  hTa.addEventListener("input", () => { slide.headline = hTa.value; repaint(); });
+  const bTa = el("textarea", { class: "niche-textarea", rows: "3", placeholder: "Body text (optional)" });
+  bTa.value = slide.body;
+  bTa.addEventListener("input", () => { slide.body = bTa.value; repaint(); });
+  ed.appendChild(el("label", { class: "niche-label" }, "Headline"));
+  ed.appendChild(hTa);
+  ed.appendChild(el("label", { class: "niche-label", style: { marginTop: "12px", display: "block" } }, "Body"));
+  ed.appendChild(bTa);
+
+  if (brand.photos.length) {
+    ed.appendChild(el("label", { class: "niche-label", style: { marginTop: "14px", display: "block" } }, "Photo on this slide"));
+    const row = el("div", { class: "car-photo-row" });
+    row.appendChild(el("button", { class: "car-photo-opt car-none" + (slide.photo == null ? " on" : ""), onclick: () => { slide.photo = null; ciSave(); render(); } }, "None"));
+    brand.photos.forEach((src, pi) => {
+      row.appendChild(el("button", { class: "car-photo-opt" + (slide.photo === pi ? " on" : ""), onclick: () => { slide.photo = pi; ciSave(); render(); } }, el("img", { src, alt: "" })));
+    });
+    ed.appendChild(row);
+  }
+
+  const order = el("div", { class: "ci-actions", style: { marginTop: "14px" } });
+  if (idx > 0) order.appendChild(el("button", { class: "copy-btn", onclick: () => { [car.slides[idx - 1], car.slides[idx]] = [car.slides[idx], car.slides[idx - 1]]; cstate.carouselSlide = idx - 1; ciSave(); render(); } }, "← Move left"));
+  if (idx < total - 1) order.appendChild(el("button", { class: "copy-btn", onclick: () => { [car.slides[idx + 1], car.slides[idx]] = [car.slides[idx], car.slides[idx + 1]]; cstate.carouselSlide = idx + 1; ciSave(); render(); } }, "Move right →"));
+  if (total < 10) order.appendChild(el("button", { class: "copy-btn", onclick: () => { car.slides.splice(idx + 1, 0, { headline: "New *slide*", body: "", photo: null }); cstate.carouselSlide = idx + 1; ciSave(); render(); } }, "+ Add slide"));
+  if (total > 2) order.appendChild(el("button", { class: "copy-btn", onclick: () => { car.slides.splice(idx, 1); cstate.carouselSlide = Math.max(0, idx - 1); ciSave(); render(); } }, "Delete slide"));
+  ed.appendChild(order);
+  wrap.appendChild(ed);
+
+  // Caption
+  const capBox = el("div", { class: "script-box", style: { marginTop: "18px" } });
+  const capHead = el("div", { class: "script-box-header" }, el("div", { class: "script-box-title" }, "Caption"), makeCopyBtn(car.caption, "Copy caption"));
+  const capTa = el("textarea", { class: "niche-textarea car-caption", rows: "6" });
+  capTa.value = car.caption;
+  capTa.addEventListener("input", () => { car.caption = capTa.value; ciSave(); });
+  capBox.appendChild(capHead);
+  capBox.appendChild(el("div", { style: { padding: "14px" } }, capTa));
+  wrap.appendChild(capBox);
+
+  // Actions
+  const actions = el("div", { class: "car-actions" });
+  if (canShareFiles()) {
+    const shareBtn = el("button", { class: "btn btn-primary btn-full" }, "Save slides to my phone");
+    shareBtn.addEventListener("click", () => shareCarousel(idea, shareBtn));
+    actions.appendChild(shareBtn);
+  }
+  const zipBtn = el("button", { class: "btn btn-full " + (canShareFiles() ? "btn-secondary" : "btn-primary") }, "Download all slides (ZIP)");
+  zipBtn.addEventListener("click", () => downloadCarouselZip(idea, zipBtn));
+  actions.appendChild(zipBtn);
+  const one = el("button", { class: "btn btn-ghost btn-full" }, `Download slide ${idx + 1} only`);
+  one.addEventListener("click", async () => {
+    const c = await drawSlide(car.slides[idx], idx, total, brand);
+    downloadBlob(await canvasToBlob(c, "image/png"), `slide-${String(idx + 1).padStart(2, "0")}.png`);
+  });
+  actions.appendChild(one);
+  actions.appendChild(el("div", { class: "car-actions-row" },
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => { cstate.brandReturn = "carousel"; cstate.view = "brand"; render(); window.scrollTo(0, 0); } }, "Edit brand kit"),
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => { if (confirm("Rewrite all slides? Your edits will be replaced.")) generateCarousel(idea.id); } }, "Rewrite slides")
+  ));
+  wrap.appendChild(actions);
+  return wrap;
+}
 
 // ═══════════════════════════════════════════
 // ACCESS CODE
@@ -3035,6 +3849,7 @@ function renderGate() {
 // ═══════════════════════════════════════════
 
 render();
+loadBrand().then(() => { if (state.section === "content") render(); });
 </script>
 
 </body>
