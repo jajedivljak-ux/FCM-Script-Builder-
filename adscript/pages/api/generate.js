@@ -1,3 +1,6 @@
+// Give longer generations (10 content ideas) room to finish.
+export const config = { maxDuration: 60 };
+
 export default async function handler(req, res) {
   // Allow CORS from claude.ai artifact sandbox
   res.setHeader("Access-Control-Allow-Origin", "*");

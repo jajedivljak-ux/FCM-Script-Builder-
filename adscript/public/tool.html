@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ad Script Builder</title>
-<!-- build: 2026-10-03 v3 captions+refine+clean -->
+<title>FCM Script Builder</title>
+<!-- build: 2026-10-15 v4 content ideas tab -->
 <style>html,body{margin:0;background:#0d0d0d}</style>
 </head>
 <body>
@@ -935,6 +935,42 @@ body {
 .angle-pill { background: var(--elevated); border: 1px solid var(--border); border-radius: 99px; padding: 6px 14px; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s; }
 .angle-pill:hover:not(:disabled) { border-color: var(--accent); color: var(--text); background: var(--accent-dim); }
 .angle-pill:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Section tabs (Ad Scripts / Content Ideas) ── */
+.section-tabs { display: flex; gap: 4px; padding: 10px 24px 0; max-width: 780px; width: 100%; margin: 0 auto; }
+.section-tab { flex: 1; background: none; border: none; border-bottom: 2px solid var(--border); color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 600; padding: 10px 8px; cursor: pointer; transition: all 0.15s; }
+.section-tab:hover { color: var(--text); }
+.section-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+@media (max-width: 620px) { .section-tabs { padding: 8px 16px 0; } }
+
+/* ── Content Ideas ── */
+.ci-group { margin-top: 28px; }
+.ci-group-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.ci-group-hint { font-size: 12px; color: var(--text-muted); margin: 0 0 10px; }
+.ci-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+.ci-pill { background: var(--elevated); border: 1px solid var(--border); border-radius: 99px; padding: 7px 14px; font-size: 13px; color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s; text-align: left; }
+.ci-pill:hover { border-color: #444; color: var(--text); }
+.ci-pill.on { background: var(--accent-dim2); border-color: var(--accent); color: var(--text); }
+.ci-pill small { display: block; font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.ci-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; }
+.ci-toolbar .spacer { flex: 1; }
+.ci-filter { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.ci-list { display: flex; flex-direction: column; gap: 12px; }
+.ci-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+.ci-card-top { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 10px; }
+.ci-card-num { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; color: var(--text-muted); margin-right: 4px; }
+.ci-title { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 6px; }
+.ci-hook { font-size: 17px; font-weight: 600; line-height: 1.45; margin-bottom: 10px; }
+.ci-angle { font-size: 13px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 8px; white-space: pre-wrap; }
+.ci-cta { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+.ci-cta strong { color: var(--text-secondary); font-weight: 600; }
+.ci-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ci-script { margin-top: 14px; background: var(--elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); }
+.ci-script-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border-light); font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); }
+.ci-script-body { padding: 14px 16px; font-size: 14px; line-height: 1.75; white-space: pre-wrap; }
+.ci-inline-load { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 13px; color: var(--text-secondary); }
+.ci-inline-load .spinner { width: 18px; height: 18px; border-width: 2px; }
+.ci-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 30px 0; }
 </style>
 
 <div id="app"></div>
@@ -1123,6 +1159,7 @@ const RECOMMENDED = {
 const VIEWS = ["niche","mode","awareness","sophistication","emotion","duration","framework","build","hooks","result"];
 
 let state = {
+  section: "ads",
   view: "niche",
   niche: "",
   avatar: "",
@@ -1502,15 +1539,24 @@ function html(strings, ...vals) {
 
 function render() {
   const app = document.getElementById("app");
+  const scrollY = window.scrollY;
   app.innerHTML = "";
 
   // Topbar
   const topbar = renderTopbar();
   app.appendChild(topbar);
+  app.appendChild(renderSectionTabs());
 
   // Main
   const main = document.createElement("div");
   main.className = "main";
+
+  if (state.section === "content") {
+    main.appendChild(cstate.view === "ideas" ? renderContentIdeas() : renderContentSetup());
+    app.appendChild(main);
+    window.scrollTo(0, scrollY);
+    return;
+  }
 
   const viewMap = {
     niche: renderNiche,
@@ -1540,12 +1586,12 @@ function renderTopbar() {
 
   const brand = el("div", { class: "topbar-brand" },
     el("span", { class: "bolt" }, "⚡"),
-    el("span", {}, "Ad Script Builder"),
+    el("span", {}, state.section === "content" ? "Content Ideas" : "Ad Script Builder"),
     el("span", { class: "topbar-sub" }, "Freedom Coach Method")
   );
 
   const idx = viewIndex();
-  const showProgress = idx >= 0;
+  const showProgress = idx >= 0 && state.section !== "content";
 
   const right = document.createElement("div");
   right.style.display = "flex";
@@ -1572,7 +1618,7 @@ function renderTopbar() {
       render();
     }
   });
-  right.appendChild(resetBtn);
+  if (state.section !== "content") right.appendChild(resetBtn);
 
   bar.appendChild(brand);
   bar.appendChild(right);
@@ -2505,6 +2551,412 @@ function makeCopyBtn(text, label) {
 function escHtml(str) {
   return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
+
+
+// ═══════════════════════════════════════════
+// CONTENT IDEAS SECTION
+// ═══════════════════════════════════════════
+
+const CI_PILLARS = [
+  { id: "pain", label: "Pain", hint: "What they struggle with right now" },
+  { id: "desire", label: "Desire", hint: "The outcome they want" },
+  { id: "myth", label: "Myth busting", hint: "A common belief that's wrong" },
+  { id: "belief", label: "Belief shift", hint: "Change how they see the problem" },
+  { id: "story", label: "Story", hint: "Your journey or a lesson learned" },
+  { id: "hottake", label: "Hot take", hint: "A strong opinion in your niche" },
+  { id: "value", label: "Teach", hint: "A tip, framework or how-to" },
+  { id: "proof", label: "Proof", hint: "A client win or result" }
+];
+
+const CI_STAGES = [
+  { id: "TOF", label: "Top of funnel", hint: "Reach new people. CTA: follow or save", cls: "blue" },
+  { id: "MOF", label: "Middle of funnel", hint: "Build trust. Stories and opinions", cls: "green" },
+  { id: "BOF", label: "Bottom of funnel", hint: "Convert. CTA: comment, DM or link", cls: "orange" }
+];
+
+const CI_FORMATS = [
+  { id: "talking", label: "Talking head" },
+  { id: "demo", label: "Demo or tutorial with voiceover" },
+  { id: "carousel", label: "Carousel" },
+  { id: "broll", label: "B-roll with text on screen" },
+  { id: "beforeafter", label: "Before and after" }
+];
+
+const CI_STORE_KEY = "fcm-content-ideas-v1";
+
+let cstate = {
+  view: "setup",
+  niche: "", avatar: "", painPoints: "", desiredOutcome: "",
+  story: "", proof: "", offer: "", keyword: "",
+  pillars: CI_PILLARS.map(p => p.id),
+  stages: CI_STAGES.map(s => s.id),
+  formats: ["talking", "demo", "carousel"],
+  ideas: [],
+  filter: "all",
+  loading: false,
+  error: ""
+};
+let ciNextId = 1;
+
+function ciSave() {
+  try {
+    const ideas = cstate.ideas.map(i => ({ ...i, scriptLoading: false, scriptError: "" }));
+    const { loading, error, ...rest } = cstate;
+    localStorage.setItem(CI_STORE_KEY, JSON.stringify({ ...rest, ideas }));
+  } catch (e) {}
+}
+
+function ciLoad() {
+  try {
+    const raw = localStorage.getItem(CI_STORE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    cstate = { ...cstate, ...saved, loading: false, error: "" };
+    ciNextId = cstate.ideas.reduce((m, i) => Math.max(m, i.id || 0), 0) + 1;
+  } catch (e) {}
+}
+
+function ciContext() {
+  const pillarNames = CI_PILLARS.filter(p => cstate.pillars.includes(p.id)).map(p => p.label).join(", ");
+  const stageNames = CI_STAGES.filter(s => cstate.stages.includes(s.id)).map(s => `${s.id} (${s.hint})`).join("; ");
+  const formatNames = CI_FORMATS.filter(f => cstate.formats.includes(f.id)).map(f => f.label).join(", ");
+  return `CREATOR'S BUSINESS:
+- Niche: ${cstate.niche}
+- Target audience: ${cstate.avatar}
+- Their pain points: ${cstate.painPoints}
+- Their desired outcome: ${cstate.desiredOutcome}
+- Creator's story and background: ${cstate.story || "(not provided)"}
+- Client results and proof: ${cstate.proof || "(not provided)"}
+- What they sell: ${cstate.offer || "(not provided)"}
+- Comment keyword for CTAs: ${cstate.keyword || "(not provided, use a follow or DM CTA instead)"}
+
+CONTENT MIX:
+- Pillars to use: ${pillarNames}
+- Funnel stages to use: ${stageNames}
+- Formats to use: ${formatNames}`;
+}
+
+function buildIdeasPrompt(count) {
+  const avoid = cstate.ideas.map(i => `- ${i.hook}`).slice(-60).join("\n");
+  return `You are a short-form content strategist for coaches and service businesses on Instagram and TikTok. You come up with specific, filmable content ideas that grow an audience and turn followers into clients.
+
+${ciContext()}
+
+TASK: Write ${count} content ideas for this creator.
+
+RULES:
+- Spread the ideas evenly across the listed pillars, funnel stages and formats. Use only the ones listed.
+- Every idea must be specific to this niche and audience. No generic ideas that fit any business.
+- Use the creator's story and client results where they fit. Never invent numbers, names or results they didn't give. If a detail is needed, write it as [their detail] so they fill it in.
+- Hooks are the first line spoken or shown on screen. 6 to 18 words. Never open with "I". Call out the audience or their problem.
+- The angle tells the creator what to say or show, in 2 or 3 short sentences.
+- CTA matches the stage: TOF is follow or save, MOF is follow or comment an opinion, BOF uses the comment keyword if given, otherwise a DM or link CTA.
+${avoid ? `- Do not repeat or closely reword any of these existing hooks:\n${avoid}` : ""}
+
+${HUMANIZER_SHORT}
+
+OUTPUT: Return only a JSON array, no other text. Each item:
+{"title": "3 to 6 word working title", "pillar": "one pillar name from the list", "stage": "TOF, MOF or BOF", "format": "one format from the list", "hook": "...", "angle": "...", "cta": "..."}`;
+}
+
+function buildIdeaScriptPrompt(idea) {
+  return `You write short-form video scripts that sound like a real person talking to camera.
+
+${ciContext()}
+
+THE IDEA:
+- Title: ${idea.title}
+- Pillar: ${idea.pillar}
+- Funnel stage: ${idea.stage}
+- Format: ${idea.format}
+- Hook: ${idea.hook}
+- Angle: ${idea.angle}
+- CTA: ${idea.cta}
+
+TASK: Write the full script, ready to film. 30 to 45 seconds, 80 to 120 spoken words.
+
+RULES:
+- Open with the hook word for word.
+- Short spoken sentences. One idea per sentence.
+- Put visual directions in square brackets on their own line, like [B-roll: client check-in on phone] or [Text on screen: 3 mistakes]. For a carousel, write it slide by slide instead.
+- Never invent numbers, names or results. Use [their detail] where the creator needs to fill something in.
+- End with the CTA, stated once.
+
+${HUMANIZER_SHORT}
+
+OUTPUT FORMAT, nothing else:
+SCRIPT:
+(the script)
+
+CAPTION:
+(a 2 to 4 sentence caption for the post, no hashtags)
+
+FILMING NOTE:
+(one sentence on how to film it)`;
+}
+
+function parseIdeas(text) {
+  const start = text.indexOf("[");
+  const end = text.lastIndexOf("]");
+  if (start === -1 || end <= start) throw new Error("The ideas came back in the wrong format. Try again.");
+  let arr;
+  try { arr = JSON.parse(text.slice(start, end + 1)); }
+  catch (e) { throw new Error("The ideas came back in the wrong format. Try again."); }
+  if (!Array.isArray(arr) || !arr.length) throw new Error("No ideas came back. Try again.");
+  return arr.filter(i => i && i.hook).map(i => ({
+    id: ciNextId++,
+    title: cleanCopy(i.title || ""),
+    pillar: cleanCopy(i.pillar || ""),
+    stage: String(i.stage || "").toUpperCase().slice(0, 3),
+    format: cleanCopy(i.format || ""),
+    hook: cleanCopy(i.hook),
+    angle: cleanCopy(i.angle || ""),
+    cta: cleanCopy(i.cta || ""),
+    script: "",
+    scriptLoading: false,
+    scriptError: ""
+  }));
+}
+
+async function generateIdeas() {
+  cstate.loading = true;
+  cstate.error = "";
+  cstate.view = "ideas";
+  render();
+  try {
+    const text = await callAPI(buildIdeasPrompt(10), 3500);
+    const fresh = parseIdeas(text);
+    cstate.ideas = [...fresh, ...cstate.ideas];
+    cstate.filter = "all";
+  } catch (e) {
+    cstate.error = e.message || "Something went wrong. Try again.";
+  }
+  cstate.loading = false;
+  ciSave();
+  render();
+  window.scrollTo(0, 0);
+}
+
+async function generateIdeaScript(id) {
+  const idea = cstate.ideas.find(i => i.id === id);
+  if (!idea) return;
+  idea.scriptLoading = true;
+  idea.scriptError = "";
+  render();
+  try {
+    const text = await callAPI(buildIdeaScriptPrompt(idea), 1200);
+    if (!text.trim()) throw new Error("The script came back empty. Try again.");
+    idea.script = cleanCopy(text);
+  } catch (e) {
+    idea.scriptError = e.message || "Something went wrong. Try again.";
+  }
+  idea.scriptLoading = false;
+  ciSave();
+  render();
+}
+
+function ideaAsText(i, n) {
+  return `${n ? n + ". " : ""}${i.title} (${i.stage}, ${i.pillar}, ${i.format})
+Hook: ${i.hook}
+Angle: ${i.angle}
+CTA: ${i.cta}${i.script ? "\n\n" + i.script : ""}`;
+}
+
+function ciTogglePill(key, id) {
+  const list = cstate[key];
+  if (list.includes(id)) {
+    if (list.length === 1) return; // keep at least one
+    cstate[key] = list.filter(x => x !== id);
+  } else cstate[key] = [...list, id];
+  ciSave();
+  render();
+}
+
+function renderContentSetup() {
+  const wrap = document.createElement("div");
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Content Ideas"),
+    el("h1", { class: "view-title" }, "Never run out of things to post."),
+    el("p", { class: "view-desc" }, "Tell it about your business once. It gives you 10 filmable ideas at a time, each with a hook, what to say and a CTA. Tap any idea to get the full script.")
+  ));
+
+  // Bring over anything already typed in the ad builder.
+  for (const k of ["niche", "avatar", "painPoints", "desiredOutcome"]) {
+    if (!cstate[k] && state[k]) cstate[k] = state[k];
+  }
+
+  const form = el("div", { class: "niche-form" });
+  let genBtn;
+  function sync() {
+    const ok = cstate.niche.trim() && cstate.avatar.trim() && cstate.painPoints.trim() && cstate.desiredOutcome.trim();
+    if (genBtn) genBtn.disabled = !ok;
+  }
+  function field(labelText, placeholder, key, hint, rows) {
+    const group = el("div", { class: "niche-field" });
+    group.appendChild(el("label", { class: "niche-label" }, labelText));
+    if (hint) group.appendChild(el("p", { class: "niche-hint" }, hint));
+    const ta = el("textarea", { class: "niche-textarea", placeholder, rows: rows || "2" });
+    ta.value = cstate[key] || "";
+    ta.addEventListener("input", () => { cstate[key] = ta.value; sync(); ciSave(); });
+    group.appendChild(ta);
+    return group;
+  }
+
+  form.appendChild(field("Your niche", "e.g. Online coaching for busy mums who want to lose weight", "niche", "What you do and who for."));
+  form.appendChild(field("Your target audience", "e.g. Mums aged 30 to 45, two kids, no time for the gym, tried every diet", "avatar", "Who you want watching. Be specific."));
+  form.appendChild(field("Their pain points", "e.g. No time, low energy, keep starting and quitting, feel guilty taking time for themselves", "painPoints", "What they struggle with, in their words."));
+  form.appendChild(field("Their desired outcome", "e.g. Lose 10kg and keep it off without spending hours in the gym", "desiredOutcome", "What winning looks like for them."));
+  form.appendChild(field("Your story (optional)", "e.g. Ex-army, 10 years as a PT, went online after burning out on 60 hour weeks", "story", "Background and moments that shaped you. Used for story and authority ideas.", "3"));
+  form.appendChild(field("Client results (optional)", "e.g. Sarah lost 8kg in 12 weeks training 3x a week at home", "proof", "Real wins only. The tool never makes results up.", "3"));
+  form.appendChild(field("What you sell (optional)", "e.g. 12 week online coaching program with weekly check-ins", "offer", null));
+  form.appendChild(field("Comment keyword (optional)", "e.g. READY", "keyword", "Used in bottom of funnel CTAs, like \"comment READY\"."));
+  wrap.appendChild(form);
+
+  function pillGroup(title, hint, items, key) {
+    const g = el("div", { class: "ci-group" },
+      el("div", { class: "ci-group-title" }, title),
+      el("p", { class: "ci-group-hint" }, hint)
+    );
+    const row = el("div", { class: "ci-pills" });
+    for (const it of items) {
+      const on = cstate[key].includes(it.id);
+      const pill = el("button", { class: "ci-pill" + (on ? " on" : ""), onclick: () => ciTogglePill(key, it.id) }, it.label);
+      if (it.hint) pill.appendChild(el("small", {}, it.hint));
+      row.appendChild(pill);
+    }
+    g.appendChild(row);
+    return g;
+  }
+  wrap.appendChild(pillGroup("Content pillars", "Tap to turn off any you don't want.", CI_PILLARS, "pillars"));
+  wrap.appendChild(pillGroup("Funnel stages", "A good feed has all three.", CI_STAGES, "stages"));
+  wrap.appendChild(pillGroup("Formats", "Pick the ones you'll actually film.", CI_FORMATS, "formats"));
+
+  genBtn = el("button", { class: "btn btn-primary btn-full", style: { marginTop: "32px" }, onclick: generateIdeas }, "Give me 10 ideas →");
+  wrap.appendChild(genBtn);
+  if (cstate.ideas.length) {
+    wrap.appendChild(el("button", { class: "btn btn-ghost btn-full", style: { marginTop: "10px" }, onclick: () => { cstate.view = "ideas"; render(); window.scrollTo(0, 0); } }, `View my saved ideas (${cstate.ideas.length})`));
+  }
+  sync();
+  return wrap;
+}
+
+function renderContentIdeas() {
+  const wrap = document.createElement("div");
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Content Ideas"),
+    el("h1", { class: "view-title" }, cstate.ideas.length ? `${cstate.ideas.length} ideas ready to film.` : "Your ideas"),
+    el("p", { class: "view-desc" }, "Newest at the top. Ideas save on this device, so you can come back to them.")
+  ));
+
+  const bar = el("div", { class: "ci-toolbar" },
+    el("button", { class: "btn btn-primary btn-sm", onclick: generateIdeas, ...(cstate.loading ? { disabled: "true" } : {}) }, "+ 10 more ideas"),
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => { cstate.view = "setup"; render(); window.scrollTo(0, 0); } }, "Edit my info"),
+    el("div", { class: "spacer" })
+  );
+  if (cstate.ideas.length) {
+    const shown = ciVisibleIdeas();
+    bar.appendChild(makeCopyBtn(shown.map((i, n) => ideaAsText(i, n + 1)).join("\n\n"), "Copy all"));
+  }
+  wrap.appendChild(bar);
+
+  if (cstate.loading) {
+    wrap.appendChild(el("div", { class: "loading-wrap", style: { minHeight: "140px" } },
+      el("div", { class: "spinner" }),
+      el("div", { class: "loading-msg" }, "Coming up with 10 ideas for your audience...")
+    ));
+  }
+  if (cstate.error) {
+    wrap.appendChild(el("div", { class: "error-box" }, cstate.error));
+  }
+
+  if (!cstate.ideas.length) {
+    if (!cstate.loading) wrap.appendChild(el("div", { class: "ci-empty" }, "No ideas yet. Tap \"+ 10 more ideas\"."));
+    return wrap;
+  }
+
+  const filters = el("div", { class: "ci-filter" });
+  const opts = [{ id: "all", label: "All" }, ...CI_STAGES.map(s => ({ id: s.id, label: s.id }))];
+  for (const o of opts) {
+    const count = o.id === "all" ? cstate.ideas.length : cstate.ideas.filter(i => i.stage === o.id).length;
+    filters.appendChild(el("button", {
+      class: "version-pill" + (cstate.filter === o.id ? " active" : ""),
+      onclick: () => { cstate.filter = o.id; render(); }
+    }, `${o.label} (${count})`));
+  }
+  wrap.appendChild(filters);
+
+  const list = el("div", { class: "ci-list" });
+  ciVisibleIdeas().forEach((idea, n) => list.appendChild(renderIdeaCard(idea, n + 1)));
+  wrap.appendChild(list);
+
+  wrap.appendChild(el("div", { style: { marginTop: "28px", textAlign: "center" } },
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => {
+      if (confirm("Delete all saved ideas? Your info stays.")) { cstate.ideas = []; ciSave(); render(); }
+    } }, "Clear all ideas")
+  ));
+  return wrap;
+}
+
+function ciVisibleIdeas() {
+  return cstate.filter === "all" ? cstate.ideas : cstate.ideas.filter(i => i.stage === cstate.filter);
+}
+
+function renderIdeaCard(idea, n) {
+  const stage = CI_STAGES.find(s => s.id === idea.stage);
+  const card = el("div", { class: "ci-card" });
+  const top = el("div", { class: "ci-card-top" }, el("span", { class: "ci-card-num" }, String(n).padStart(2, "0")));
+  if (idea.stage) top.appendChild(el("span", { class: "tag-chip" + (stage ? " " + stage.cls : "") }, idea.stage));
+  if (idea.pillar) top.appendChild(el("span", { class: "tag-chip" }, idea.pillar));
+  if (idea.format) top.appendChild(el("span", { class: "tag-chip" }, idea.format));
+  card.appendChild(top);
+  if (idea.title) card.appendChild(el("div", { class: "ci-title" }, idea.title));
+  card.appendChild(el("div", { class: "ci-hook" }, idea.hook));
+  if (idea.angle) card.appendChild(el("div", { class: "ci-angle" }, idea.angle));
+  if (idea.cta) {
+    const cta = el("div", { class: "ci-cta" }, el("strong", {}, "CTA: "), idea.cta);
+    card.appendChild(cta);
+  }
+
+  const actions = el("div", { class: "ci-actions" });
+  if (!idea.script && !idea.scriptLoading) {
+    actions.appendChild(el("button", { class: "btn btn-secondary btn-sm", onclick: () => generateIdeaScript(idea.id) }, "Write full script"));
+  }
+  actions.appendChild(makeCopyBtn(ideaAsText(idea), "Copy idea"));
+  actions.appendChild(el("button", { class: "copy-btn", onclick: () => {
+    cstate.ideas = cstate.ideas.filter(i => i.id !== idea.id); ciSave(); render();
+  } }, "Remove"));
+  card.appendChild(actions);
+
+  if (idea.scriptLoading) {
+    card.appendChild(el("div", { class: "ci-inline-load" }, el("div", { class: "spinner" }), "Writing the script..."));
+  }
+  if (idea.scriptError) {
+    card.appendChild(el("div", { class: "error-box", style: { marginTop: "14px", marginBottom: "0" } }, idea.scriptError));
+  }
+  if (idea.script) {
+    const head = el("div", { class: "ci-script-head" }, el("span", {}, "Script"));
+    const btns = el("div", { style: { display: "flex", gap: "6px" } },
+      el("button", { class: "copy-btn", onclick: () => generateIdeaScript(idea.id), ...(idea.scriptLoading ? { disabled: "true" } : {}) }, "Rewrite"),
+      makeCopyBtn(idea.script, "Copy")
+    );
+    head.appendChild(btns);
+    card.appendChild(el("div", { class: "ci-script" }, head, el("div", { class: "ci-script-body" }, idea.script)));
+  }
+  return card;
+}
+
+function renderSectionTabs() {
+  const tabs = el("div", { class: "section-tabs" });
+  const make = (id, label) => el("button", {
+    class: "section-tab" + (state.section === id ? " active" : ""),
+    onclick: () => { if (state.section !== id) { state.section = id; render(); window.scrollTo(0, 0); } }
+  }, label);
+  tabs.appendChild(make("ads", "Ad Scripts"));
+  tabs.appendChild(make("content", "Content Ideas"));
+  return tabs;
+}
+
+ciLoad();
 
 // ═══════════════════════════════════════════
 // BOOT
