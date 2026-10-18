@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FCM Script Builder</title>
-<!-- build: 2026-10-18 v5 retargeting + content ideas + variety -->
+<!-- build: 2026-10-18 v6 library -->
 <style>html,body{margin:0;background:#0d0d0d}</style>
 </head>
 <body>
@@ -41,6 +41,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
@@ -950,6 +951,26 @@ body {
 .angle-panel-head { margin-bottom: 12px; }
 .angle-panel .niche-textarea { margin-top: 4px; }
 
+/* ── Library ── */
+.save-badge { font-size: 11px; color: var(--text-muted); margin-left: 10px; font-weight: 500; }
+.save-badge.saved { color: var(--success); }
+.save-badge.error { color: #ff8080; }
+.resume-banner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; background: var(--accent-dim); border: 1px solid var(--accent); border-radius: var(--radius); padding: 14px 18px; margin-top: 20px; }
+.resume-title { font-size: 14px; font-weight: 600; }
+.saved-audiences { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-top: 20px; }
+.lib-list { display: flex; flex-direction: column; gap: 12px; }
+.lib-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
+.lib-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.lib-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+.lib-hook { font-size: 13px; color: var(--text-secondary); font-style: italic; margin: 10px 0 0; line-height: 1.5; }
+.lib-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.lib-detail { border-top: 1px solid var(--border-light); margin-top: 12px; }
+.lib-script { font-size: 13px; line-height: 1.7; white-space: pre-wrap; background: var(--elevated); border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 6px; }
+.client-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 12px; }
+.client-head { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.chip-x { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 0 0 0 6px; line-height: 1; }
+.chip-x:hover { color: #ff8080; }
+
 /* ── Section tabs (Ad Scripts / Content Ideas) ── */
 .section-tabs { display: flex; gap: 4px; padding: 10px 24px 0; max-width: 780px; width: 100%; margin: 0 auto; }
 .section-tab { flex: 1; background: none; border: none; border-bottom: 2px solid var(--border); color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 600; padding: 10px 8px; cursor: pointer; transition: all 0.15s; }
@@ -1286,6 +1307,7 @@ let state = {
   direction: "",
   batchAngles: [],
   seed: null,
+  currentScriptId: null,
   adDurations: [],
   selectedFramework: null,
   currentStep: 0,
@@ -1309,6 +1331,164 @@ let state = {
 // ═══════════════════════════════════════════
 // API
 // ═══════════════════════════════════════════
+
+// ═══════════════════════════════════════════
+// LIBRARY: saved work, stored on the server against the access code
+// ═══════════════════════════════════════════
+
+let lib = { profiles: [], scripts: [], draft: null, content: null, updatedAt: null };
+let me = { label: "", admin: false };
+let libLoaded = false;
+let libStatus = "";          // "", "saving", "saved", "error"
+let libSaveTimer = null;
+let clientsData = null;      // admin: [{label, codeTail, doc}]
+let clientsLoading = false;
+let clientsError = "";
+let resumeOffered = false;
+
+const INPUT_KEYS = ["niche","avatar","painPoints","desiredOutcome","adMode","awarenessStage","sophistication","dominantEmotion","adDurations","selectedFramework","answers","selectedHook","direction","angles","currentStep"];
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+async function libFetch(method, query, body) {
+  const res = await fetch("/api/library" + (query || ""), {
+    method,
+    headers: { "Content-Type": "application/json", "X-Access-Code": accessCode },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) { lockOut("Your access code is no longer active. Ask your coach for a new one."); throw new Error("Access code not active."); }
+  if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
+  return data;
+}
+
+async function loadLibrary() {
+  if (!accessCode || accessCode === "open" || accessCode === "artifact") { libLoaded = true; return; }
+  try {
+    const data = await libFetch("GET");
+    lib = { profiles: [], scripts: [], draft: null, content: null, ...(data.doc || {}) };
+    me = data.me || me;
+    libLoaded = true;
+    // Content Ideas: if the server has a profile and this device does not, adopt the server copy.
+    try { if (lib.content && !localStorage.getItem(CI_STORE_KEY)) { localStorage.setItem(CI_STORE_KEY, JSON.stringify(lib.content)); ciLoad(); } } catch (e) {}
+    render();
+  } catch (e) {
+    libLoaded = true;
+    libStatus = "error";
+    render();
+  }
+}
+
+function saveLibrary() {
+  if (!accessCode || accessCode === "open" || accessCode === "artifact") return;
+  clearTimeout(libSaveTimer);
+  libStatus = "saving";
+  updateSaveBadge();
+  libSaveTimer = setTimeout(async () => {
+    try {
+      const { updatedAt, ...doc } = lib;
+      await libFetch("PUT", "", { doc });
+      libStatus = "saved";
+    } catch (e) {
+      libStatus = "error";
+    }
+    updateSaveBadge();
+  }, 700);
+}
+
+function updateSaveBadge() {
+  const b = document.getElementById("save-badge");
+  if (!b) return;
+  b.textContent = libStatus === "saving" ? "Saving..." : libStatus === "saved" ? "Saved" : libStatus === "error" ? "Not saved" : "";
+  b.className = "save-badge " + libStatus;
+}
+
+function snapshotInputs() {
+  const o = {};
+  for (const k of INPUT_KEYS) o[k] = JSON.parse(JSON.stringify(state[k] === undefined ? null : state[k]));
+  return o;
+}
+function applyInputs(o) {
+  for (const k of INPUT_KEYS) if (o && o[k] !== undefined && o[k] !== null) state[k] = JSON.parse(JSON.stringify(o[k]));
+}
+
+// Audience profiles: keyed by niche + avatar
+function upsertProfile() {
+  const key = (state.niche + "|" + state.avatar).trim().toLowerCase();
+  if (!state.niche.trim() || !state.avatar.trim()) return;
+  const existing = lib.profiles.find(p => (p.niche + "|" + p.avatar).trim().toLowerCase() === key);
+  const data = { niche: state.niche, avatar: state.avatar, painPoints: state.painPoints, desiredOutcome: state.desiredOutcome, updatedAt: new Date().toISOString() };
+  if (existing) Object.assign(existing, data);
+  else lib.profiles.unshift({ id: uid(), createdAt: data.updatedAt, ...data });
+  lib.profiles = lib.profiles.slice(0, 50);
+  saveLibrary();
+}
+
+// Scripts: one entry per generation, updated on every refine
+function scriptTitle() {
+  const fw = FRAMEWORKS[state.selectedFramework];
+  const mode = AD_MODES[state.adMode];
+  return `${mode ? mode.label : "Ad"} · ${fw ? fw.label : ""} · ${state.niche.slice(0, 40)}`;
+}
+function saveCurrentScript() {
+  if (!Object.keys(state.scriptHistory || {}).length) return;
+  const now = new Date().toISOString();
+  let entry = state.currentScriptId ? lib.scripts.find(s => s.id === state.currentScriptId) : null;
+  if (!entry) {
+    entry = { id: uid(), createdAt: now, title: scriptTitle() };
+    state.currentScriptId = entry.id;
+    lib.scripts.unshift(entry);
+  }
+  entry.updatedAt = now;
+  entry.inputs = snapshotInputs();
+  entry.history = JSON.parse(JSON.stringify(state.scriptHistory));
+  entry.activeVersion = { ...state.activeVersion };
+  entry.hook = state.selectedHook;
+  lib.scripts = lib.scripts.slice(0, 500);
+  saveLibrary();
+}
+function openSavedScript(entry) {
+  applyInputs(entry.inputs || {});
+  state.scriptHistory = JSON.parse(JSON.stringify(entry.history || {}));
+  state.activeVersion = { ...(entry.activeVersion || {}) };
+  state.generatedScripts = {};
+  for (const d of Object.keys(state.scriptHistory)) {
+    const v = state.scriptHistory[d][state.activeVersion[d] || 0];
+    if (v) state.generatedScripts[d] = v.text;
+  }
+  state.selectedHook = entry.hook || state.selectedHook;
+  state.currentScriptId = entry.id;
+  state.generatedHooks = state.selectedHook ? [state.selectedHook] : [];
+  state.activeDurationTab = AD_DURATIONS.map(d => d.id).find(id => (state.adDurations || []).includes(id)) || Object.keys(state.scriptHistory)[0] || null;
+  state.refineError = {}; state.refineLoading = {}; state.loading = false; state.apiError = "";
+  state.section = "ads";
+  state.view = "result";
+  render();
+  window.scrollTo(0, 0);
+}
+function deleteSavedScript(id) {
+  lib.scripts = lib.scripts.filter(s => s.id !== id);
+  if (state.currentScriptId === id) state.currentScriptId = null;
+  saveLibrary();
+  render();
+}
+
+// Draft: where they are in the flow, so closing the tab loses nothing
+function saveDraft() {
+  if (!libLoaded) return;
+  if (state.view === "niche" || state.view === "result") return;
+  lib.draft = { view: state.view, savedAt: new Date().toISOString(), inputs: snapshotInputs() };
+  saveLibrary();
+}
+function clearDraft() { if (lib.draft) { lib.draft = null; saveLibrary(); } }
+function resumeDraft() {
+  if (!lib.draft) return;
+  applyInputs(lib.draft.inputs || {});
+  state.view = VIEWS.includes(lib.draft.view) ? lib.draft.view : "mode";
+  state.section = "ads";
+  resumeOffered = true;
+  render();
+}
 
 // The page talks to this site's own /api/generate route, which holds the API key server-side.
 async function callAPI(prompt, maxTokens) {
@@ -1732,6 +1912,8 @@ function render() {
     return;
   }
 
+  if (!libLoaded) { libLoaded = true; loadLibrary(); }
+
   // Topbar
   const topbar = renderTopbar();
   app.appendChild(topbar);
@@ -1740,6 +1922,19 @@ function render() {
   // Main
   const main = document.createElement("div");
   main.className = "main";
+
+  if (state.section === "library") {
+    main.appendChild(renderLibrary());
+    app.appendChild(main);
+    window.scrollTo(0, scrollY);
+    return;
+  }
+  if (state.section === "clients") {
+    main.appendChild(renderClients());
+    app.appendChild(main);
+    window.scrollTo(0, scrollY);
+    return;
+  }
 
   if (state.section === "content") {
     const cviews = { ideas: renderContentIdeas, brand: renderBrandKit, carousel: renderCarouselView };
@@ -1769,6 +1964,7 @@ function render() {
   }
 
   app.appendChild(main);
+  saveDraft();
 }
 
 function renderTopbar() {
@@ -1777,12 +1973,13 @@ function renderTopbar() {
 
   const brand = el("div", { class: "topbar-brand" },
     el("span", { class: "bolt" }, "⚡"),
-    el("span", {}, state.section === "content" ? "Content Ideas" : "Ad Script Builder"),
+    el("span", {}, state.section === "content" ? "Content Ideas" : state.section === "library" ? "My Scripts" : state.section === "clients" ? "Clients" : "Ad Script Builder"),
+    el("span", { id: "save-badge", class: "save-badge " + libStatus }, libStatus === "saving" ? "Saving..." : libStatus === "saved" ? "Saved" : libStatus === "error" ? "Not saved" : ""),
     el("span", { class: "topbar-sub" }, "Freedom Coach Method")
   );
 
   const idx = viewIndex();
-  const showProgress = idx >= 0 && state.section !== "content";
+  const showProgress = idx >= 0 && state.section === "ads";
 
   const right = document.createElement("div");
   right.style.display = "flex";
@@ -1805,11 +2002,11 @@ function renderTopbar() {
   resetBtn.textContent = "Start over";
   resetBtn.addEventListener("click", () => {
     if (confirm("Start over? Your current progress will be lost.")) {
-      state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", angles: [], direction: "", batchAngles: [], seed: null, adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
+      state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", angles: [], direction: "", batchAngles: [], seed: null, currentScriptId: null, adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
       render();
     }
   });
-  if (state.section !== "content") right.appendChild(resetBtn);
+  if (state.section === "ads") right.appendChild(resetBtn);
 
   bar.appendChild(brand);
   bar.appendChild(right);
@@ -1824,6 +2021,35 @@ function renderNiche() {
   wrap.appendChild(el("div", { class: "step-label" }, "STEP 1 OF 9"));
   wrap.appendChild(el("h1", { class: "step-title" }, "Who are you talking to?"));
   wrap.appendChild(el("p", { class: "step-subtitle" }, "The more specific you are here, the better the hooks and scripts will be. Don't be vague."));
+
+  if (lib.draft && !resumeOffered && lib.draft.view && lib.draft.view !== "niche") {
+    const label = viewLabel.call(null) || "";
+    const banner = el("div", { class: "resume-banner" },
+      el("div", {},
+        el("div", { class: "resume-title" }, "Pick up where you left off?"),
+        el("div", { class: "captions-sub" }, `You were partway through an ad for "${(lib.draft.inputs && lib.draft.inputs.niche) || "your audience"}" (${new Date(lib.draft.savedAt).toLocaleDateString()}).`)
+      ),
+      el("div", { style: "display:flex;gap:8px;flex-shrink:0;" },
+        el("button", { class: "btn btn-primary btn-sm", onclick: () => resumeDraft() }, "Resume"),
+        el("button", { class: "btn btn-ghost btn-sm", onclick: () => { resumeOffered = true; clearDraft(); render(); } }, "Start fresh")
+      )
+    );
+    wrap.appendChild(banner);
+  }
+
+  if (lib.profiles.length) {
+    const saved = el("div", { class: "saved-audiences" });
+    saved.appendChild(el("div", { class: "script-box-title" }, "Saved audiences"));
+    saved.appendChild(el("div", { class: "captions-sub", style: "margin-bottom:10px;" }, "Tap one to fill the form. Edits are saved back automatically."));
+    const row = el("div", { class: "angle-row" });
+    for (const pr of lib.profiles.slice(0, 8)) {
+      const b = el("button", { class: "angle-pill", title: pr.avatar }, pr.niche.slice(0, 32) + (pr.avatar ? " · " + pr.avatar.slice(0, 28) : ""));
+      b.addEventListener("click", () => { state.niche = pr.niche; state.avatar = pr.avatar; state.painPoints = pr.painPoints || ""; state.desiredOutcome = pr.desiredOutcome || ""; render(); });
+      row.appendChild(b);
+    }
+    saved.appendChild(row);
+    wrap.appendChild(saved);
+  }
 
   const form = el("div", { class: "niche-form" });
 
@@ -1854,7 +2080,7 @@ function renderNiche() {
   }
 
   syncNicheBtn();
-  nextBtn.addEventListener("click", () => { state.view = "mode"; render(); });
+  nextBtn.addEventListener("click", () => { upsertProfile(); state.view = "mode"; render(); });
   wrap.appendChild(nextBtn);
 
   return wrap;
@@ -2622,7 +2848,7 @@ function renderResult() {
     el("button", {
       class: "btn btn-primary btn-sm",
       onclick: () => {
-        state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", angles: [], direction: "", batchAngles: [], seed: null, adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
+        state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", angles: [], direction: "", batchAngles: [], seed: null, currentScriptId: null, adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
         render();
       }
     }, "Build another →")
@@ -2693,6 +2919,9 @@ async function generateScript() {
     state.activeDurationTab = AD_DURATIONS.map(d => d.id).find(id => state.adDurations.includes(id));
     state.copied = false;
     state.loading = false;
+    state.currentScriptId = null;   // a fresh generation is a new saved entry
+    saveCurrentScript();
+    clearDraft();
     render();
   } catch (err) {
     state.loading = false;
@@ -2718,6 +2947,7 @@ async function refineScript(durId, instruction, label) {
     state.generatedScripts[durId] = text;
     state.refineText[durId] = "";
     state.refineLoading[durId] = false;
+    saveCurrentScript();
     render();
   } catch (err) {
     state.refineLoading[durId] = false;
@@ -2830,7 +3060,10 @@ function ciSave() {
   try {
     const ideas = cstate.ideas.map(i => ({ ...i, scriptLoading: false, scriptError: "", carouselLoading: false, carouselError: "" }));
     const { loading, error, ...rest } = cstate;
-    localStorage.setItem(CI_STORE_KEY, JSON.stringify({ ...rest, ideas }));
+    const payload = { ...rest, ideas };
+    localStorage.setItem(CI_STORE_KEY, JSON.stringify(payload));
+    lib.content = payload;
+    saveLibrary();
   } catch (e) {}
 }
 
@@ -3190,6 +3423,8 @@ function renderSectionTabs() {
   }, label);
   tabs.appendChild(make("ads", "Ad Scripts"));
   tabs.appendChild(make("content", "Content Ideas"));
+  if (accessCode !== "open" && accessCode !== "artifact") tabs.appendChild(make("library", "My Scripts" + (lib.scripts.length ? ` (${lib.scripts.length})` : "")));
+  if (me.admin) tabs.appendChild(make("clients", "Clients"));
   return tabs;
 }
 
@@ -3972,6 +4207,128 @@ function lockOut(msg) {
   try { localStorage.removeItem(ACCESS_KEY); } catch (e) {}
   render();
   window.scrollTo(0, 0);
+}
+
+// ── VIEW: My Scripts ──
+function fmtDate(iso) { try { return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return ""; } }
+
+function renderScriptCard(entry, opts) {
+  opts = opts || {};
+  const card = el("div", { class: "lib-card" });
+  const mode = AD_MODES[(entry.inputs || {}).adMode];
+  const cls = mode ? (mode.id === "follower" ? "blue" : mode.id === "indirect" ? "green" : mode.id === "retarget" ? "purple" : "orange") : "";
+  const durs = Object.keys(entry.history || {});
+  const versions = durs.reduce((m, d) => Math.max(m, (entry.history[d] || []).length), 0);
+  card.appendChild(el("div", { class: "lib-card-head" },
+    el("div", {},
+      el("div", { class: "lib-title" }, entry.title || "Untitled"),
+      el("div", { class: "captions-sub" }, `${fmtDate(entry.updatedAt || entry.createdAt)} · ${durs.join(", ") || "no durations"} · ${versions} version${versions === 1 ? "" : "s"}`)
+    ),
+    mode ? el("div", { class: "tag-chip " + cls }, mode.label) : null
+  ));
+  if (entry.hook) card.appendChild(el("div", { class: "lib-hook" }, `"${entry.hook}"`));
+  const actions = el("div", { class: "lib-actions" });
+  if (opts.readOnly) {
+    const toggle = el("button", { class: "btn btn-ghost btn-sm" }, "View scripts");
+    const detail = el("div", { class: "lib-detail", hidden: "" });
+    for (const d of durs) {
+      const list = entry.history[d] || [];
+      const v = list[(entry.activeVersion || {})[d] || 0] || list[list.length - 1];
+      if (!v) continue;
+      detail.appendChild(el("div", { class: "script-box-title", style: "margin-top:12px;" }, (AD_DURATIONS.find(x => x.id === d) || { label: d }).label + (list.length > 1 ? ` · v${list.indexOf(v) + 1} ${v.label}` : "")));
+      detail.appendChild(el("div", { class: "lib-script" }, v.text));
+      if (v.captions && v.captions.length) detail.appendChild(el("div", { class: "captions-sub" }, "Captions: " + v.captions.length));
+    }
+    toggle.addEventListener("click", () => { detail.hidden = !detail.hidden; toggle.textContent = detail.hidden ? "View scripts" : "Hide scripts"; });
+    actions.appendChild(toggle);
+    card.appendChild(actions);
+    card.appendChild(detail);
+  } else {
+    actions.appendChild(el("button", { class: "btn btn-primary btn-sm", onclick: () => openSavedScript(entry) }, "Open"));
+    const del = el("button", { class: "btn btn-ghost btn-sm" }, "Delete");
+    let armed = false;
+    del.addEventListener("click", () => {
+      if (!armed) { armed = true; del.textContent = "Tap again to delete"; setTimeout(() => { armed = false; del.textContent = "Delete"; }, 2500); return; }
+      deleteSavedScript(entry.id);
+    });
+    actions.appendChild(del);
+    card.appendChild(actions);
+  }
+  return card;
+}
+
+function renderLibrary() {
+  const wrap = document.createElement("div");
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "My scripts"),
+    el("h1", { class: "view-title" }, lib.scripts.length ? `${lib.scripts.length} saved script${lib.scripts.length === 1 ? "" : "s"}.` : "Nothing saved yet."),
+    el("p", { class: "view-desc" }, "Every script you generate is saved here automatically, with all its versions and captions. Open one to copy, refine, or build on it. Saved against your access code, so it follows you between devices.")
+  ));
+  if (libStatus === "error") wrap.appendChild(el("div", { class: "error-box" }, "Couldn't reach the library on the server. Your work in this tab is still here; it just isn't syncing. Reload to try again."));
+  if (!lib.scripts.length) {
+    wrap.appendChild(el("button", { class: "btn btn-primary", onclick: () => { state.section = "ads"; render(); } }, "Build your first script →"));
+    return wrap;
+  }
+  const list = el("div", { class: "lib-list" });
+  for (const entry of lib.scripts) list.appendChild(renderScriptCard(entry));
+  wrap.appendChild(list);
+
+  if (lib.profiles.length) {
+    wrap.appendChild(el("div", { class: "script-box-title", style: "margin-top:32px;margin-bottom:8px;" }, "Saved audiences"));
+    const row = el("div", { class: "angle-row" });
+    for (const pr of lib.profiles) {
+      const chip = el("span", { class: "angle-pill", style: "cursor:default;" }, pr.niche.slice(0, 32) + " · " + (pr.avatar || "").slice(0, 28) + " ");
+      const x = el("button", { class: "chip-x", title: "Remove" }, "×");
+      x.addEventListener("click", () => { lib.profiles = lib.profiles.filter(p => p.id !== pr.id); saveLibrary(); render(); });
+      chip.appendChild(x);
+      row.appendChild(chip);
+    }
+    wrap.appendChild(row);
+  }
+  return wrap;
+}
+
+// ── VIEW: Clients (coach only) ──
+async function loadClients() {
+  clientsLoading = true; clientsError = ""; render();
+  try { clientsData = (await libFetch("GET", "?clients=1")).clients || []; }
+  catch (e) { clientsError = e.message || "Couldn't load clients."; }
+  clientsLoading = false; render();
+}
+
+function renderClients() {
+  const wrap = document.createElement("div");
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Clients"),
+    el("h1", { class: "view-title" }, "Who's built what."),
+    el("p", { class: "view-desc" }, "Every access code and the work saved against it. Read-only: open a client's script to review it before a call.")
+  ));
+  if (!clientsData && !clientsLoading && !clientsError) { loadClients(); }
+  if (clientsLoading) { wrap.appendChild(el("div", { class: "loading-wrap" }, el("div", { class: "spinner" }), el("div", { class: "loading-msg" }, "Loading clients..."))); return wrap; }
+  if (clientsError) { wrap.appendChild(el("div", { class: "error-box" }, clientsError)); wrap.appendChild(el("button", { class: "btn btn-primary btn-sm", onclick: () => loadClients() }, "Try again")); return wrap; }
+  const refresh = el("button", { class: "btn btn-ghost btn-sm", style: "margin-bottom:16px;", onclick: () => loadClients() }, "↻ Refresh");
+  wrap.appendChild(refresh);
+  for (const c of clientsData || []) {
+    const box = el("div", { class: "client-box" });
+    const scripts = (c.doc && c.doc.scripts) || [];
+    const profiles = (c.doc && c.doc.profiles) || [];
+    box.appendChild(el("div", { class: "client-head" },
+      el("div", {},
+        el("div", { class: "lib-title" }, c.label + (c.admin ? " (coach)" : "")),
+        el("div", { class: "captions-sub" }, `Code ending ${c.codeTail} · ${scripts.length} script${scripts.length === 1 ? "" : "s"} · ${profiles.length} audience${profiles.length === 1 ? "" : "s"}` + (c.doc && c.doc.updatedAt ? ` · last active ${fmtDate(c.doc.updatedAt)}` : " · not started"))
+      )
+    ));
+    if (scripts.length) {
+      const toggle = el("button", { class: "btn btn-ghost btn-sm" }, "Show scripts");
+      const list = el("div", { class: "lib-list", hidden: "", style: "margin-top:12px;" });
+      for (const entry of scripts) list.appendChild(renderScriptCard(entry, { readOnly: true }));
+      toggle.addEventListener("click", () => { list.hidden = !list.hidden; toggle.textContent = list.hidden ? "Show scripts" : "Hide scripts"; });
+      box.appendChild(toggle);
+      box.appendChild(list);
+    }
+    wrap.appendChild(box);
+  }
+  return wrap;
 }
 
 let gateProbed = false;
