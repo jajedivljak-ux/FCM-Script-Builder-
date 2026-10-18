@@ -15,7 +15,7 @@ import fs from "fs";
 import path from "path";
 
 const BLOB = "https://blob.vercel-storage.com";
-const API_VERSION = "7";
+const API_VERSION = "13";
 
 // ── access codes (same rules as generate.js and check-code.js) ──
 function normalizeCode(raw) {
@@ -59,8 +59,8 @@ async function blobRead(url) {
   // Private stores: the SDK reads through the API with the token. Try the known
   // routes in order and remember which one works for this process.
   const attempts = [
-    ["get-endpoint", () => fetch(`${BLOB}/get?url=${encodeURIComponent(url)}`, { headers: { authorization: `Bearer ${token}`, "x-api-version": API_VERSION }, cache: "no-store" })],
-    ["url-with-token", () => fetch(url, { headers: { authorization: `Bearer ${token}`, "x-api-version": API_VERSION }, cache: "no-store" })],
+    ["url-with-token", () => fetch(url + (url.includes("?") ? "&" : "?") + "cache=0", { headers: { authorization: `Bearer ${token}` }, cache: "no-store" })],
+    ["url-with-token-plain", () => fetch(url, { headers: { authorization: `Bearer ${token}` }, cache: "no-store" })],
     ["url-public", () => fetch(url, { cache: "no-store" })],
   ];
   const order = readStrategy ? attempts.filter(a => a[0] === readStrategy).concat(attempts.filter(a => a[0] !== readStrategy)) : attempts;
@@ -84,7 +84,7 @@ async function blobWrite(pathname, body) {
       "x-add-random-suffix": "0",
       "x-allow-overwrite": "1",
       "x-cache-control-max-age": "0",
-      "x-access": "private",
+      "x-vercel-blob-access": "private",
     },
     body,
   });
