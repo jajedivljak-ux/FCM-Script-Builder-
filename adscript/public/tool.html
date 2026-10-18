@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ad Script Builder</title>
-<!-- build: 2026-10-18 v4 retargeting -->
+<title>FCM Script Builder</title>
+<!-- build: 2026-10-18 v5 retargeting + content ideas + variety -->
 <style>html,body{margin:0;background:#0d0d0d}</style>
 </head>
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@800&family=Playfair+Display:wght@700&display=swap">
 
 <style>
 :root {
@@ -944,6 +945,96 @@ body {
 .angle-pill { background: var(--elevated); border: 1px solid var(--border); border-radius: 99px; padding: 6px 14px; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s; }
 .angle-pill:hover:not(:disabled) { border-color: var(--accent); color: var(--text); background: var(--accent-dim); }
 .angle-pill:disabled { opacity: 0.5; cursor: not-allowed; }
+.angle-pill.on { background: var(--accent-dim2); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.angle-panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px 16px; margin-bottom: 20px; }
+.angle-panel-head { margin-bottom: 12px; }
+.angle-panel .niche-textarea { margin-top: 4px; }
+
+/* ── Section tabs (Ad Scripts / Content Ideas) ── */
+.section-tabs { display: flex; gap: 4px; padding: 10px 24px 0; max-width: 780px; width: 100%; margin: 0 auto; }
+.section-tab { flex: 1; background: none; border: none; border-bottom: 2px solid var(--border); color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 600; padding: 10px 8px; cursor: pointer; transition: all 0.15s; }
+.section-tab:hover { color: var(--text); }
+.section-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+@media (max-width: 620px) { .section-tabs { padding: 8px 16px 0; } }
+
+/* ── Content Ideas ── */
+.ci-group { margin-top: 28px; }
+.ci-group-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.ci-group-hint { font-size: 12px; color: var(--text-muted); margin: 0 0 10px; }
+.ci-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+.ci-pill { background: var(--elevated); border: 1px solid var(--border); border-radius: 99px; padding: 7px 14px; font-size: 13px; color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s; text-align: left; }
+.ci-pill:hover { border-color: #444; color: var(--text); }
+.ci-pill.on { background: var(--accent-dim2); border-color: var(--accent); color: var(--text); }
+.ci-pill small { display: block; font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.ci-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; }
+.ci-toolbar .spacer { flex: 1; }
+.ci-filter { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.ci-list { display: flex; flex-direction: column; gap: 12px; }
+.ci-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+.ci-card-top { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 10px; }
+.ci-card-num { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; color: var(--text-muted); margin-right: 4px; }
+.ci-title { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 6px; }
+.ci-hook { font-size: 17px; font-weight: 600; line-height: 1.45; margin-bottom: 10px; }
+.ci-angle { font-size: 13px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 8px; white-space: pre-wrap; }
+.ci-cta { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+.ci-cta strong { color: var(--text-secondary); font-weight: 600; }
+.ci-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ci-script { margin-top: 14px; background: var(--elevated); border: 1px solid var(--border-light); border-radius: var(--radius-sm); }
+.ci-script-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border-light); font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); }
+.ci-script-body { padding: 14px 16px; font-size: 14px; line-height: 1.75; white-space: pre-wrap; }
+.ci-inline-load { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 13px; color: var(--text-secondary); }
+.ci-inline-load .spinner { width: 18px; height: 18px; border-width: 2px; }
+.ci-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 30px 0; }
+
+
+/* ── Brand kit ── */
+.bk-preview { display: flex; justify-content: center; margin-bottom: 8px; }
+.bk-preview-img { width: 100%; max-width: 280px; aspect-ratio: 4 / 5; border-radius: 12px; border: 1px solid var(--border); background: var(--card); object-fit: cover; }
+.bk-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.bk-logo-box { height: 56px; min-width: 56px; max-width: 200px; padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: repeating-conic-gradient(#222 0 25%, #1a1a1a 0 50%) 0 0 / 14px 14px; display: flex; align-items: center; }
+.bk-logo-box img { max-height: 44px; max-width: 180px; }
+.bk-photos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.bk-photo { position: relative; aspect-ratio: 1; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); background: var(--card); }
+.bk-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bk-photo:first-child { border-color: var(--accent); }
+.bk-photo-btn { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(0,0,0,0.7); color: #fff; font-size: 15px; line-height: 1; cursor: pointer; }
+.bk-photo-btn.bk-first { right: auto; left: 4px; font-size: 12px; }
+.bk-add { display: flex; align-items: center; justify-content: center; text-align: center; font-family: inherit; font-size: 12px; color: var(--text-secondary); cursor: pointer; border-style: dashed; padding: 6px; }
+.bk-add:hover { color: var(--text); border-color: var(--accent); }
+.bk-swatch { display: inline-block; width: 16px; height: 16px; border-radius: 50%; margin-right: 7px; vertical-align: -3px; border: 1px solid rgba(255,255,255,0.25); }
+.bk-pickers { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.bk-picker { display: flex; align-items: center; gap: 8px; background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px 6px 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+.bk-color { width: 34px; height: 34px; border: none; padding: 0; background: none; cursor: pointer; }
+.bk-styles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.bk-style { border-radius: var(--radius-sm); padding: 14px; }
+.bk-style-sample { display: block; font-size: 20px; color: var(--text); line-height: 1.2; }
+.bk-nudge { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: var(--accent-dim); border: 1px solid var(--accent); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; color: var(--text); }
+@media (max-width: 620px) { .bk-photos { grid-template-columns: repeat(3, 1fr); } }
+
+/* ── Carousel builder ── */
+.car-strip { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 14px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.car-thumb-wrap { position: relative; flex: 0 0 auto; scroll-snap-align: start; }
+.car-thumb { width: 200px; aspect-ratio: 4 / 5; border-radius: 10px; border: 2px solid transparent; background: var(--card); display: block; cursor: pointer; object-fit: cover; }
+.car-thumb.active { border-color: var(--accent); }
+.car-thumb-num { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.65); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.car-editor { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px 18px; }
+.car-editor .niche-label { margin-bottom: 6px; display: block; }
+.car-photo-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.car-photo-opt { flex: 0 0 auto; width: 56px; height: 56px; border-radius: var(--radius-sm); border: 2px solid var(--border); background: var(--elevated); padding: 0; overflow: hidden; cursor: pointer; font-family: inherit; font-size: 11px; color: var(--text-secondary); }
+.car-photo-opt img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.car-photo-opt.on { border-color: var(--accent); }
+.car-caption { resize: vertical; }
+.car-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.car-actions-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+@media (max-width: 620px) { .car-thumb { width: 64vw; } }
+
+/* ── Access gate ── */
+.gate-wrap { max-width: 380px; margin: 0 auto; padding: 18vh 24px 40px; text-align: center; }
+.gate-logo { width: 52px; height: 52px; margin: 0 auto 18px; border-radius: 14px; background: var(--accent); color: #fff; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+.gate-title { font-size: 24px; font-weight: 700; margin: 0 0 8px; }
+.gate-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 24px; }
+.gate-input { width: 100%; text-align: center; letter-spacing: 0.08em; font-size: 16px; margin-bottom: 10px; }
+.gate-msg { min-height: 20px; font-size: 13px; color: #ff8080; margin-bottom: 12px; }
 </style>
 
 <div id="app"></div>
@@ -1181,6 +1272,7 @@ const RECOMMENDED = {
 const VIEWS = ["niche","mode","awareness","sophistication","emotion","duration","framework","build","hooks","result"];
 
 let state = {
+  section: "ads",
   view: "niche",
   niche: "",
   avatar: "",
@@ -1190,6 +1282,10 @@ let state = {
   awarenessStage: null,
   sophistication: null,
   dominantEmotion: "",
+  angles: [],
+  direction: "",
+  batchAngles: [],
+  seed: null,
   adDurations: [],
   selectedFramework: null,
   currentStep: 0,
@@ -1220,13 +1316,17 @@ async function callAPI(prompt, maxTokens) {
   try {
     res = await fetch("/api/generate", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "X-Access-Code": accessCode },
       body: JSON.stringify({ prompt, maxTokens: maxTokens || 1200 })
     });
   } catch (e) {
     throw new Error("Couldn't reach the server. Check your connection and try again.");
   }
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    lockOut("Your access code is no longer active. Ask your coach for a new one.");
+    throw new Error("Your access code is no longer active.");
+  }
   if (!res.ok) throw new Error(data.error || `Server error ${res.status}. Try again in a moment.`);
   return data.text || "";
 }
@@ -1234,6 +1334,65 @@ async function callAPI(prompt, maxTokens) {
 // ═══════════════════════════════════════════
 // PROMPTS
 // ═══════════════════════════════════════════
+
+// ── Variety: angles, structural seeds, and a memory of recent hooks ──
+const HOOK_ANGLES = [
+  { id: "callout", label: "Call out the avatar", instruction: "Call out the exact person watching by their situation, role, or stage. They should think 'that's me'." },
+  { id: "pain", label: "Name the pain", instruction: "Name the specific daily pain or frustration in the words they'd use to a friend." },
+  { id: "contrarian", label: "Contrarian", instruction: "Challenge a belief this avatar holds that is keeping them stuck. Say the thing nobody in the niche says." },
+  { id: "proof", label: "Lead with proof", instruction: "Open with a specific result: a name, a number, a timeframe. Let the result do the talking." },
+  { id: "story", label: "Story moment", instruction: "Drop them into a specific moment, mid-scene. A time, a place, a thing that happened. No setup." },
+  { id: "question", label: "The question they ask", instruction: "Open with the exact question this avatar asks themselves at 11pm. Not a rhetorical ad question, a real one." },
+  { id: "cost", label: "Cost of waiting", instruction: "Open with what another month of not acting is actually costing them. Concrete, not dramatic." },
+  { id: "mechanism", label: "The mechanism", instruction: "Open by naming the specific thing that makes this approach different. The method, the system, the one variable everyone else misses." },
+  { id: "mistake", label: "The mistake", instruction: "Open with the one mistake almost everyone in this situation makes, and that the viewer is probably making right now." },
+  { id: "identity", label: "Who they want to be", instruction: "Open with the identity they're reaching for, the version of themselves on the other side of this." }
+];
+
+const STYLE_SEEDS = [
+  "Open with a number.",
+  "Open with a flat statement of fact, no emotion in the words.",
+  "Open with a short sentence of five words or fewer.",
+  "Open with something the avatar would say out loud, in quotes.",
+  "Open with a specific time or place.",
+  "Open with a comparison between two things.",
+  "Open with the word 'Most' or 'Every'.",
+  "Open by naming what this is NOT.",
+  "Open with a 'you' observation about something they do.",
+  "Open with the end result, then work backwards."
+];
+
+function pickRandom(arr, n) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [copy[i], copy[j]] = [copy[j], copy[i]]; }
+  return copy.slice(0, n);
+}
+
+const RECENT_KEY = "fcm-recent-hooks";
+function recentKey() { return [state.niche, state.avatar, state.adMode].join("|").toLowerCase().slice(0, 300); }
+function recentHooks() {
+  try { const all = JSON.parse(localStorage.getItem(RECENT_KEY) || "{}"); return all[recentKey()] || []; } catch (e) { return []; }
+}
+function rememberHooks(hooks) {
+  try {
+    const all = JSON.parse(localStorage.getItem(RECENT_KEY) || "{}");
+    const k = recentKey();
+    all[k] = (hooks.concat(all[k] || [])).filter((h, i, a) => a.indexOf(h) === i).slice(0, 15);
+    const keys = Object.keys(all); if (keys.length > 20) delete all[keys[0]];
+    localStorage.setItem(RECENT_KEY, JSON.stringify(all));
+  } catch (e) {}
+}
+
+function varietyBlock() {
+  const angles = (state.batchAngles.length ? state.batchAngles : state.angles).map(id => HOOK_ANGLES.find(a => a.id === id)).filter(Boolean);
+  const lines = [];
+  if (angles.length) lines.push("ANGLES FOR THIS BATCH (one hook per angle, in this order):\n" + angles.map((a, i) => `${i + 1}. ${a.label}: ${a.instruction}`).join("\n"));
+  if (state.seed) lines.push("STRUCTURAL SEED for hook 1: " + state.seed);
+  if (state.direction.trim()) lines.push("CREATIVE DIRECTION FROM THE USER (follow this above everything else):\n" + state.direction.trim());
+  const recent = recentHooks();
+  if (recent.length) lines.push("ALREADY USED, do not repeat these openings or their structure, find a different way in:\n" + recent.map(h => "- " + h).join("\n"));
+  return lines.length ? lines.join("\n\n") + "\n\n" : "";
+}
 
 function buildHookPrompt() {
   const mode = AD_MODES[state.adMode];
@@ -1286,7 +1445,7 @@ HUMANIZER RULES — apply every single one:
 - Never rhyme unless it's completely natural.
 - The hook must stop the scroll in the first 2 to 3 seconds.
 
-Generate exactly 3 distinct hooks. Each takes a different angle: one calls out the avatar directly, one names the pain, one makes a bold or contrarian claim. Format your response EXACTLY as:
+${varietyBlock()}Generate exactly 3 distinct hooks. Each must take a genuinely different angle and a different sentence structure from the others. Format your response EXACTLY as:
 
 HOOK 1:
 [hook text]
@@ -1329,7 +1488,7 @@ STRATEGIC CONTEXT:
 - Primary Emotion to trigger: ${state.dominantEmotion}
 - Duration target: ${dur.label} / ${dur.wordCount} words spoken naturally
 
-${state.adMode === "retarget" ? "RETARGETING RULES: the viewer already knows this brand. No introductions, no credentials, no explaining the offer from scratch. Assume they have watched the VSL or seen the page. Speak to the hesitation, not the problem. Shorter is better.\n\n" : ""}SELECTED HOOK (use this exactly as written to open the script):
+${state.direction.trim() ? "CREATIVE DIRECTION FROM THE USER (follow this above everything else):\n" + state.direction.trim() + "\n\n" : ""}${state.adMode === "retarget" ? "RETARGETING RULES: the viewer already knows this brand. No introductions, no credentials, no explaining the offer from scratch. Assume they have watched the VSL or seen the page. Speak to the hesitation, not the problem. Shorter is better.\n\n" : ""}SELECTED HOOK (use this exactly as written to open the script):
 ${state.selectedHook}
 
 CONTENT INPUT (use this raw material, don't invent details):
@@ -1350,6 +1509,7 @@ HUMANIZER RULES — non-negotiable:
 8. The CTA must be singular. One action. Stated clearly, twice maximum.
 9. No summary or conclusion paragraphs. End on the CTA.
 10. The script must hit the word count target for the duration selected.
+10b. Vary the rhythm and structure. Do not fall into the pattern 'If you're X... I'm Y... I help Z'. Every script you write should feel like a different person wrote it on a different day. Structural seed for this one: ${state.seed || STYLE_SEEDS[0]}
 11. Use paragraph breaks for natural spoken pauses. No bullet points in the script.
 
 Output ONLY the script. No headers, no section labels, no word count, no notes. Just the script as it would be spoken.`;
@@ -1564,15 +1724,30 @@ function html(strings, ...vals) {
 
 function render() {
   const app = document.getElementById("app");
+  const scrollY = window.scrollY;
   app.innerHTML = "";
+
+  if (!accessCode) {
+    app.appendChild(renderGate());
+    return;
+  }
 
   // Topbar
   const topbar = renderTopbar();
   app.appendChild(topbar);
+  app.appendChild(renderSectionTabs());
 
   // Main
   const main = document.createElement("div");
   main.className = "main";
+
+  if (state.section === "content") {
+    const cviews = { ideas: renderContentIdeas, brand: renderBrandKit, carousel: renderCarouselView };
+    main.appendChild((cviews[cstate.view] || renderContentSetup)());
+    app.appendChild(main);
+    window.scrollTo(0, scrollY);
+    return;
+  }
 
   const viewMap = {
     niche: renderNiche,
@@ -1602,12 +1777,12 @@ function renderTopbar() {
 
   const brand = el("div", { class: "topbar-brand" },
     el("span", { class: "bolt" }, "⚡"),
-    el("span", {}, "Ad Script Builder"),
+    el("span", {}, state.section === "content" ? "Content Ideas" : "Ad Script Builder"),
     el("span", { class: "topbar-sub" }, "Freedom Coach Method")
   );
 
   const idx = viewIndex();
-  const showProgress = idx >= 0;
+  const showProgress = idx >= 0 && state.section !== "content";
 
   const right = document.createElement("div");
   right.style.display = "flex";
@@ -1630,11 +1805,11 @@ function renderTopbar() {
   resetBtn.textContent = "Start over";
   resetBtn.addEventListener("click", () => {
     if (confirm("Start over? Your current progress will be lost.")) {
-      state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
+      state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", angles: [], direction: "", batchAngles: [], seed: null, adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
       render();
     }
   });
-  right.appendChild(resetBtn);
+  if (state.section !== "content") right.appendChild(resetBtn);
 
   bar.appendChild(brand);
   bar.appendChild(right);
@@ -2219,6 +2394,8 @@ function renderHooks() {
     return wrap;
   }
 
+  wrap.appendChild(renderAnglePanel());
+
   const grid = el("div", { class: "hooks-grid" });
 
   state.generatedHooks.forEach((hook, i) => {
@@ -2245,6 +2422,35 @@ function renderHooks() {
   wrap.appendChild(footer);
 
   return wrap;
+}
+
+function renderAnglePanel() {
+  const panel = el("div", { class: "angle-panel" });
+  const batch = state.batchAngles.map(id => HOOK_ANGLES.find(a => a.id === id)).filter(Boolean).map(a => a.label);
+  panel.appendChild(el("div", { class: "angle-panel-head" },
+    el("div", {},
+      el("div", { class: "script-box-title" }, "Angles for the next batch"),
+      el("div", { class: "captions-sub" }, batch.length ? "This batch: " + batch.join(" · ") + ". Pick up to three for the next one, or leave it to chance." : "Pick up to three, or leave it to chance.")
+    )
+  ));
+  const row = el("div", { class: "angle-row" });
+  for (const a of HOOK_ANGLES) {
+    const on = state.angles.includes(a.id);
+    const b = el("button", { class: "angle-pill" + (on ? " on" : ""), title: a.instruction }, a.label);
+    b.addEventListener("click", () => {
+      if (on) state.angles = state.angles.filter(x => x !== a.id);
+      else if (state.angles.length < 3) state.angles = state.angles.concat(a.id);
+      render();
+    });
+    row.appendChild(b);
+  }
+  panel.appendChild(row);
+  const ta = el("textarea", { class: "niche-textarea", rows: "2", placeholder: "Optional direction, e.g. lean into the 4am alarm, mention the 2.4km run, speak to dads over 35, no military references this time" });
+  ta.value = state.direction;
+  ta.addEventListener("input", () => { state.direction = ta.value; });
+  panel.appendChild(ta);
+  panel.appendChild(el("div", { class: "captions-sub", style: "margin-top:8px;" }, "Direction carries into the scripts too. Hooks you've already generated for this audience are remembered on this device and won't be repeated."));
+  return panel;
 }
 
 // ── Result ──
@@ -2416,7 +2622,7 @@ function renderResult() {
     el("button", {
       class: "btn btn-primary btn-sm",
       onclick: () => {
-        state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
+        state = { ...state, view: "niche", niche: "", avatar: "", painPoints: "", desiredOutcome: "", adMode: null, awarenessStage: null, sophistication: null, dominantEmotion: "", angles: [], direction: "", batchAngles: [], seed: null, adDurations: [], selectedFramework: null, currentStep: 0, answers: {}, generatedHooks: [], selectedHook: null, generatedScripts: {}, scriptHistory: {}, activeVersion: {}, refineLoading: {}, refineError: {}, refineText: {}, activeDurationTab: null, loading: false, apiError: "", copied: false };
         render();
       }
     }, "Build another →")
@@ -2435,12 +2641,18 @@ async function generateHooks() {
   state.loadingMessage = "Writing three hooks for your audience...";
   state.apiError = "";
   state.view = "hooks";
+  // Angles: the user's picks, topped up to three with random ones so no two batches look alike.
+  const chosen = state.angles.slice(0, 3);
+  const extra = pickRandom(HOOK_ANGLES.map(a => a.id).filter(id => !chosen.includes(id)), 3 - chosen.length);
+  state.batchAngles = chosen.concat(extra);
+  state.seed = pickRandom(STYLE_SEEDS, 1)[0];
   render();
 
   try {
     const prompt = buildHookPrompt();
     const text = await callAPI(prompt, 800);
     state.generatedHooks = parseHooks(text);
+    rememberHooks(state.generatedHooks);
     state.selectedHook = null;
     state.loading = false;
     render();
@@ -2568,11 +2780,1250 @@ function escHtml(str) {
   return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+
+// ═══════════════════════════════════════════
+// CONTENT IDEAS SECTION
+// ═══════════════════════════════════════════
+
+const CI_PILLARS = [
+  { id: "pain", label: "Pain", hint: "What they struggle with right now" },
+  { id: "desire", label: "Desire", hint: "The outcome they want" },
+  { id: "myth", label: "Myth busting", hint: "A common belief that's wrong" },
+  { id: "belief", label: "Belief shift", hint: "Change how they see the problem" },
+  { id: "story", label: "Story", hint: "Your journey or a lesson learned" },
+  { id: "hottake", label: "Hot take", hint: "A strong opinion in your niche" },
+  { id: "value", label: "Teach", hint: "A tip, framework or how-to" },
+  { id: "proof", label: "Proof", hint: "A client win or result" }
+];
+
+const CI_STAGES = [
+  { id: "TOF", label: "Top of funnel", hint: "Reach new people. CTA: follow or save", cls: "blue" },
+  { id: "MOF", label: "Middle of funnel", hint: "Build trust. Stories and opinions", cls: "green" },
+  { id: "BOF", label: "Bottom of funnel", hint: "Convert. CTA: comment, DM or link", cls: "orange" }
+];
+
+const CI_FORMATS = [
+  { id: "talking", label: "Talking head" },
+  { id: "demo", label: "Demo or tutorial with voiceover" },
+  { id: "carousel", label: "Carousel" },
+  { id: "broll", label: "B-roll with text on screen" },
+  { id: "beforeafter", label: "Before and after" }
+];
+
+const CI_STORE_KEY = "fcm-content-ideas-v1";
+
+let cstate = {
+  view: "setup",
+  niche: "", avatar: "", painPoints: "", desiredOutcome: "",
+  story: "", proof: "", offer: "", keyword: "",
+  pillars: CI_PILLARS.map(p => p.id),
+  stages: CI_STAGES.map(s => s.id),
+  formats: ["talking", "demo", "carousel"],
+  ideas: [],
+  filter: "all",
+  loading: false,
+  error: ""
+};
+let ciNextId = 1;
+
+function ciSave() {
+  try {
+    const ideas = cstate.ideas.map(i => ({ ...i, scriptLoading: false, scriptError: "", carouselLoading: false, carouselError: "" }));
+    const { loading, error, ...rest } = cstate;
+    localStorage.setItem(CI_STORE_KEY, JSON.stringify({ ...rest, ideas }));
+  } catch (e) {}
+}
+
+function ciLoad() {
+  try {
+    const raw = localStorage.getItem(CI_STORE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    cstate = { ...cstate, ...saved, loading: false, error: "" };
+    ciNextId = cstate.ideas.reduce((m, i) => Math.max(m, i.id || 0), 0) + 1;
+  } catch (e) {}
+}
+
+function ciContext() {
+  const pillarNames = CI_PILLARS.filter(p => cstate.pillars.includes(p.id)).map(p => p.label).join(", ");
+  const stageNames = CI_STAGES.filter(s => cstate.stages.includes(s.id)).map(s => `${s.id} (${s.hint})`).join("; ");
+  const formatNames = CI_FORMATS.filter(f => cstate.formats.includes(f.id)).map(f => f.label).join(", ");
+  return `CREATOR'S BUSINESS:
+- Niche: ${cstate.niche}
+- Target audience: ${cstate.avatar}
+- Their pain points: ${cstate.painPoints}
+- Their desired outcome: ${cstate.desiredOutcome}
+- Creator's story and background: ${cstate.story || "(not provided)"}
+- Client results and proof: ${cstate.proof || "(not provided)"}
+- What they sell: ${cstate.offer || "(not provided)"}
+- Comment keyword for CTAs: ${cstate.keyword || "(not provided, use a follow or DM CTA instead)"}
+
+CONTENT MIX:
+- Pillars to use: ${pillarNames}
+- Funnel stages to use: ${stageNames}
+- Formats to use: ${formatNames}`;
+}
+
+function buildIdeasPrompt(count) {
+  const avoid = cstate.ideas.map(i => `- ${i.hook}`).slice(-60).join("\n");
+  return `You are a short-form content strategist for coaches and service businesses on Instagram and TikTok. You come up with specific, filmable content ideas that grow an audience and turn followers into clients.
+
+${ciContext()}
+
+TASK: Write ${count} content ideas for this creator.
+
+RULES:
+- Spread the ideas evenly across the listed pillars, funnel stages and formats. Use only the ones listed.
+- Every idea must be specific to this niche and audience. No generic ideas that fit any business.
+- Use the creator's story and client results where they fit. Never invent numbers, names or results they didn't give. If a detail is needed, write it as [their detail] so they fill it in.
+- Hooks are the first line spoken or shown on screen. 6 to 18 words. Never open with "I". Call out the audience or their problem.
+- The angle tells the creator what to say or show, in 2 or 3 short sentences.
+- CTA matches the stage: TOF is follow or save, MOF is follow or comment an opinion, BOF uses the comment keyword if given, otherwise a DM or link CTA.
+${avoid ? `- Do not repeat or closely reword any of these existing hooks:\n${avoid}` : ""}
+
+${HUMANIZER_SHORT}
+
+OUTPUT: Return only a JSON array, no other text. Each item:
+{"title": "3 to 6 word working title", "pillar": "one pillar name from the list", "stage": "TOF, MOF or BOF", "format": "one format from the list", "hook": "...", "angle": "...", "cta": "..."}`;
+}
+
+function buildIdeaScriptPrompt(idea) {
+  return `You write short-form video scripts that sound like a real person talking to camera.
+
+${ciContext()}
+
+THE IDEA:
+- Title: ${idea.title}
+- Pillar: ${idea.pillar}
+- Funnel stage: ${idea.stage}
+- Format: ${idea.format}
+- Hook: ${idea.hook}
+- Angle: ${idea.angle}
+- CTA: ${idea.cta}
+
+TASK: Write the full script, ready to film. 30 to 45 seconds, 80 to 120 spoken words.
+
+RULES:
+- Open with the hook word for word.
+- Short spoken sentences. One idea per sentence.
+- Put visual directions in square brackets on their own line, like [B-roll: client check-in on phone] or [Text on screen: 3 mistakes]. For a carousel, write it slide by slide instead.
+- Never invent numbers, names or results. Use [their detail] where the creator needs to fill something in.
+- End with the CTA, stated once.
+
+${HUMANIZER_SHORT}
+
+OUTPUT FORMAT, nothing else:
+SCRIPT:
+(the script)
+
+CAPTION:
+(a 2 to 4 sentence caption for the post, no hashtags)
+
+FILMING NOTE:
+(one sentence on how to film it)`;
+}
+
+function parseIdeas(text) {
+  const start = text.indexOf("[");
+  const end = text.lastIndexOf("]");
+  if (start === -1 || end <= start) throw new Error("The ideas came back in the wrong format. Try again.");
+  let arr;
+  try { arr = JSON.parse(text.slice(start, end + 1)); }
+  catch (e) { throw new Error("The ideas came back in the wrong format. Try again."); }
+  if (!Array.isArray(arr) || !arr.length) throw new Error("No ideas came back. Try again.");
+  return arr.filter(i => i && i.hook).map(i => ({
+    id: ciNextId++,
+    title: cleanCopy(i.title || ""),
+    pillar: cleanCopy(i.pillar || ""),
+    stage: String(i.stage || "").toUpperCase().slice(0, 3),
+    format: cleanCopy(i.format || ""),
+    hook: cleanCopy(i.hook),
+    angle: cleanCopy(i.angle || ""),
+    cta: cleanCopy(i.cta || ""),
+    script: "",
+    scriptLoading: false,
+    scriptError: ""
+  }));
+}
+
+async function generateIdeas() {
+  cstate.loading = true;
+  cstate.error = "";
+  cstate.view = "ideas";
+  render();
+  try {
+    const text = await callAPI(buildIdeasPrompt(10), 3500);
+    const fresh = parseIdeas(text);
+    cstate.ideas = [...fresh, ...cstate.ideas];
+    cstate.filter = "all";
+  } catch (e) {
+    cstate.error = e.message || "Something went wrong. Try again.";
+  }
+  cstate.loading = false;
+  ciSave();
+  render();
+  window.scrollTo(0, 0);
+}
+
+async function generateIdeaScript(id) {
+  const idea = cstate.ideas.find(i => i.id === id);
+  if (!idea) return;
+  idea.scriptLoading = true;
+  idea.scriptError = "";
+  render();
+  try {
+    const text = await callAPI(buildIdeaScriptPrompt(idea), 1200);
+    if (!text.trim()) throw new Error("The script came back empty. Try again.");
+    idea.script = cleanCopy(text);
+  } catch (e) {
+    idea.scriptError = e.message || "Something went wrong. Try again.";
+  }
+  idea.scriptLoading = false;
+  ciSave();
+  render();
+}
+
+function ideaAsText(i, n) {
+  return `${n ? n + ". " : ""}${i.title} (${i.stage}, ${i.pillar}, ${i.format})
+Hook: ${i.hook}
+Angle: ${i.angle}
+CTA: ${i.cta}${i.script ? "\n\n" + i.script : ""}`;
+}
+
+function ciTogglePill(key, id) {
+  const list = cstate[key];
+  if (list.includes(id)) {
+    if (list.length === 1) return; // keep at least one
+    cstate[key] = list.filter(x => x !== id);
+  } else cstate[key] = [...list, id];
+  ciSave();
+  render();
+}
+
+function renderContentSetup() {
+  const wrap = document.createElement("div");
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Content Ideas"),
+    el("h1", { class: "view-title" }, "Never run out of things to post."),
+    el("p", { class: "view-desc" }, "Tell it about your business once. It gives you 10 filmable ideas at a time, each with a hook, what to say and a CTA. Tap any idea to get the full script.")
+  ));
+
+  // Bring over anything already typed in the ad builder.
+  for (const k of ["niche", "avatar", "painPoints", "desiredOutcome"]) {
+    if (!cstate[k] && state[k]) cstate[k] = state[k];
+  }
+
+  const form = el("div", { class: "niche-form" });
+  let genBtn;
+  function sync() {
+    const ok = cstate.niche.trim() && cstate.avatar.trim() && cstate.painPoints.trim() && cstate.desiredOutcome.trim();
+    if (genBtn) genBtn.disabled = !ok;
+  }
+  function field(labelText, placeholder, key, hint, rows) {
+    const group = el("div", { class: "niche-field" });
+    group.appendChild(el("label", { class: "niche-label" }, labelText));
+    if (hint) group.appendChild(el("p", { class: "niche-hint" }, hint));
+    const ta = el("textarea", { class: "niche-textarea", placeholder, rows: rows || "2" });
+    ta.value = cstate[key] || "";
+    ta.addEventListener("input", () => { cstate[key] = ta.value; sync(); ciSave(); });
+    group.appendChild(ta);
+    return group;
+  }
+
+  form.appendChild(field("Your niche", "e.g. Online coaching for busy mums who want to lose weight", "niche", "What you do and who for."));
+  form.appendChild(field("Your target audience", "e.g. Mums aged 30 to 45, two kids, no time for the gym, tried every diet", "avatar", "Who you want watching. Be specific."));
+  form.appendChild(field("Their pain points", "e.g. No time, low energy, keep starting and quitting, feel guilty taking time for themselves", "painPoints", "What they struggle with, in their words."));
+  form.appendChild(field("Their desired outcome", "e.g. Lose 10kg and keep it off without spending hours in the gym", "desiredOutcome", "What winning looks like for them."));
+  form.appendChild(field("Your story (optional)", "e.g. Ex-army, 10 years as a PT, went online after burning out on 60 hour weeks", "story", "Background and moments that shaped you. Used for story and authority ideas.", "3"));
+  form.appendChild(field("Client results (optional)", "e.g. Sarah lost 8kg in 12 weeks training 3x a week at home", "proof", "Real wins only. The tool never makes results up.", "3"));
+  form.appendChild(field("What you sell (optional)", "e.g. 12 week online coaching program with weekly check-ins", "offer", null));
+  form.appendChild(field("Comment keyword (optional)", "e.g. READY", "keyword", "Used in bottom of funnel CTAs, like \"comment READY\"."));
+  wrap.appendChild(form);
+
+  function pillGroup(title, hint, items, key) {
+    const g = el("div", { class: "ci-group" },
+      el("div", { class: "ci-group-title" }, title),
+      el("p", { class: "ci-group-hint" }, hint)
+    );
+    const row = el("div", { class: "ci-pills" });
+    for (const it of items) {
+      const on = cstate[key].includes(it.id);
+      const pill = el("button", { class: "ci-pill" + (on ? " on" : ""), onclick: () => ciTogglePill(key, it.id) }, it.label);
+      if (it.hint) pill.appendChild(el("small", {}, it.hint));
+      row.appendChild(pill);
+    }
+    g.appendChild(row);
+    return g;
+  }
+  wrap.appendChild(pillGroup("Content pillars", "Tap to turn off any you don't want.", CI_PILLARS, "pillars"));
+  wrap.appendChild(pillGroup("Funnel stages", "A good feed has all three.", CI_STAGES, "stages"));
+  wrap.appendChild(pillGroup("Formats", "Pick the ones you'll actually film.", CI_FORMATS, "formats"));
+
+  genBtn = el("button", { class: "btn btn-primary btn-full", style: { marginTop: "32px" }, onclick: generateIdeas }, "Give me 10 ideas →");
+  wrap.appendChild(genBtn);
+  if (cstate.ideas.length) {
+    wrap.appendChild(el("button", { class: "btn btn-ghost btn-full", style: { marginTop: "10px" }, onclick: () => { cstate.view = "ideas"; render(); window.scrollTo(0, 0); } }, `View my saved ideas (${cstate.ideas.length})`));
+  }
+  sync();
+  return wrap;
+}
+
+function renderContentIdeas() {
+  const wrap = document.createElement("div");
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Content Ideas"),
+    el("h1", { class: "view-title" }, cstate.ideas.length ? `${cstate.ideas.length} ideas ready to film.` : "Your ideas"),
+    el("p", { class: "view-desc" }, "Newest at the top. Ideas save on this device, so you can come back to them.")
+  ));
+
+  const bar = el("div", { class: "ci-toolbar" },
+    el("button", { class: "btn btn-primary btn-sm", onclick: generateIdeas, ...(cstate.loading ? { disabled: "true" } : {}) }, "+ 10 more ideas"),
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => { cstate.view = "setup"; render(); window.scrollTo(0, 0); } }, "Edit my info"),
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => { cstate.brandReturn = "ideas"; cstate.view = "brand"; render(); window.scrollTo(0, 0); } }, "Brand kit"),
+    el("div", { class: "spacer" })
+  );
+  if (cstate.ideas.length) {
+    const shown = ciVisibleIdeas();
+    bar.appendChild(makeCopyBtn(shown.map((i, n) => ideaAsText(i, n + 1)).join("\n\n"), "Copy all"));
+  }
+  wrap.appendChild(bar);
+
+  if (cstate.loading) {
+    wrap.appendChild(el("div", { class: "loading-wrap", style: { minHeight: "140px" } },
+      el("div", { class: "spinner" }),
+      el("div", { class: "loading-msg" }, "Coming up with 10 ideas for your audience...")
+    ));
+  }
+  if (cstate.error) {
+    wrap.appendChild(el("div", { class: "error-box" }, cstate.error));
+  }
+
+  if (!cstate.ideas.length) {
+    if (!cstate.loading) wrap.appendChild(el("div", { class: "ci-empty" }, "No ideas yet. Tap \"+ 10 more ideas\"."));
+    return wrap;
+  }
+
+  const filters = el("div", { class: "ci-filter" });
+  const opts = [{ id: "all", label: "All" }, ...CI_STAGES.map(s => ({ id: s.id, label: s.id }))];
+  for (const o of opts) {
+    const count = o.id === "all" ? cstate.ideas.length : cstate.ideas.filter(i => i.stage === o.id).length;
+    filters.appendChild(el("button", {
+      class: "version-pill" + (cstate.filter === o.id ? " active" : ""),
+      onclick: () => { cstate.filter = o.id; render(); }
+    }, `${o.label} (${count})`));
+  }
+  wrap.appendChild(filters);
+
+  const list = el("div", { class: "ci-list" });
+  ciVisibleIdeas().forEach((idea, n) => list.appendChild(renderIdeaCard(idea, n + 1)));
+  wrap.appendChild(list);
+
+  wrap.appendChild(el("div", { style: { marginTop: "28px", textAlign: "center" } },
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => {
+      if (confirm("Delete all saved ideas? Your info stays.")) { cstate.ideas = []; ciSave(); render(); }
+    } }, "Clear all ideas")
+  ));
+  return wrap;
+}
+
+function ciVisibleIdeas() {
+  return cstate.filter === "all" ? cstate.ideas : cstate.ideas.filter(i => i.stage === cstate.filter);
+}
+
+function renderIdeaCard(idea, n) {
+  const stage = CI_STAGES.find(s => s.id === idea.stage);
+  const card = el("div", { class: "ci-card" });
+  const top = el("div", { class: "ci-card-top" }, el("span", { class: "ci-card-num" }, String(n).padStart(2, "0")));
+  if (idea.stage) top.appendChild(el("span", { class: "tag-chip" + (stage ? " " + stage.cls : "") }, idea.stage));
+  if (idea.pillar) top.appendChild(el("span", { class: "tag-chip" }, idea.pillar));
+  if (idea.format) top.appendChild(el("span", { class: "tag-chip" }, idea.format));
+  card.appendChild(top);
+  if (idea.title) card.appendChild(el("div", { class: "ci-title" }, idea.title));
+  card.appendChild(el("div", { class: "ci-hook" }, idea.hook));
+  if (idea.angle) card.appendChild(el("div", { class: "ci-angle" }, idea.angle));
+  if (idea.cta) {
+    const cta = el("div", { class: "ci-cta" }, el("strong", {}, "CTA: "), idea.cta);
+    card.appendChild(cta);
+  }
+
+  const actions = el("div", { class: "ci-actions" });
+  if (!idea.script && !idea.scriptLoading) {
+    actions.appendChild(el("button", { class: "btn btn-secondary btn-sm", onclick: () => generateIdeaScript(idea.id) }, "Write full script"));
+  }
+  const isCarousel = /carousel/i.test(idea.format || "");
+  if (idea.carousel) {
+    actions.appendChild(el("button", { class: "btn btn-primary btn-sm", onclick: () => openCarousel(idea.id) }, "Open carousel"));
+  } else if (isCarousel) {
+    actions.appendChild(el("button", { class: "btn btn-primary btn-sm", onclick: () => openCarousel(idea.id) }, "Build carousel"));
+  } else {
+    actions.appendChild(el("button", { class: "copy-btn", onclick: () => openCarousel(idea.id) }, "Make it a carousel"));
+  }
+  actions.appendChild(makeCopyBtn(ideaAsText(idea), "Copy idea"));
+  actions.appendChild(el("button", { class: "copy-btn", onclick: () => {
+    cstate.ideas = cstate.ideas.filter(i => i.id !== idea.id); ciSave(); render();
+  } }, "Remove"));
+  card.appendChild(actions);
+
+  if (idea.scriptLoading) {
+    card.appendChild(el("div", { class: "ci-inline-load" }, el("div", { class: "spinner" }), "Writing the script..."));
+  }
+  if (idea.scriptError) {
+    card.appendChild(el("div", { class: "error-box", style: { marginTop: "14px", marginBottom: "0" } }, idea.scriptError));
+  }
+  if (idea.script) {
+    const head = el("div", { class: "ci-script-head" }, el("span", {}, "Script"));
+    const btns = el("div", { style: { display: "flex", gap: "6px" } },
+      el("button", { class: "copy-btn", onclick: () => generateIdeaScript(idea.id), ...(idea.scriptLoading ? { disabled: "true" } : {}) }, "Rewrite"),
+      makeCopyBtn(idea.script, "Copy")
+    );
+    head.appendChild(btns);
+    card.appendChild(el("div", { class: "ci-script" }, head, el("div", { class: "ci-script-body" }, idea.script)));
+  }
+  return card;
+}
+
+function renderSectionTabs() {
+  const tabs = el("div", { class: "section-tabs" });
+  const make = (id, label) => el("button", {
+    class: "section-tab" + (state.section === id ? " active" : ""),
+    onclick: () => { if (state.section !== id) { state.section = id; render(); window.scrollTo(0, 0); } }
+  }, label);
+  tabs.appendChild(make("ads", "Ad Scripts"));
+  tabs.appendChild(make("content", "Content Ideas"));
+  return tabs;
+}
+
+ciLoad();
+
+
+
+// ═══════════════════════════════════════════
+// BRAND KIT + CAROUSEL BUILDER
+// Slides are drawn in the browser. Photos and logos never leave the device.
+// ═══════════════════════════════════════════
+
+const SLIDE_W = 1080, SLIDE_H = 1350, SLIDE_PAD = 96;
+
+const BRAND_PRESETS = [
+  { id: "dark", label: "Dark + orange", bg: "#111111", text: "#ffffff", primary: "#ff6a1f" },
+  { id: "light", label: "White + black", bg: "#ffffff", text: "#111111", primary: "#111111" },
+  { id: "navy", label: "Navy + gold", bg: "#0f1b33", text: "#ffffff", primary: "#e7b54a" },
+  { id: "cream", label: "Cream + green", bg: "#f4efe6", text: "#1d2a22", primary: "#2f6b4f" },
+  { id: "blush", label: "Blush + plum", bg: "#f7e8e4", text: "#2b1a24", primary: "#8a2d5a" },
+  { id: "black", label: "Black + lime", bg: "#0b0b0b", text: "#f2f2f2", primary: "#c6f432" }
+];
+
+const SLIDE_STYLES = [
+  { id: "clean", label: "Clean", head: "Montserrat", headWeight: 800, upper: false, sample: "Clean and modern" },
+  { id: "bold", label: "Bold", head: "Bebas Neue", headWeight: 400, upper: true, sample: "BIG AND LOUD" },
+  { id: "editorial", label: "Editorial", head: "Playfair Display", headWeight: 700, upper: false, sample: "Classy and calm" },
+  { id: "minimal", label: "Minimal", head: "Inter", headWeight: 700, upper: false, sample: "Simple and quiet" }
+];
+
+let brand = { handle: "", logo: "", photos: [], preset: "dark", bg: "#111111", text: "#ffffff", primary: "#ff6a1f", style: "clean" };
+let brandLoaded = false;
+
+// ── Device storage (IndexedDB holds the images, localStorage is too small) ──
+const BrandStore = {
+  db: null,
+  open() {
+    if (this.db) return Promise.resolve(this.db);
+    return new Promise((resolve, reject) => {
+      try {
+        const req = indexedDB.open("fcm-brand-kit", 1);
+        req.onupgradeneeded = () => req.result.createObjectStore("kv");
+        req.onsuccess = () => { this.db = req.result; resolve(this.db); };
+        req.onerror = () => reject(req.error);
+      } catch (e) { reject(e); }
+    });
+  },
+  async get(key) {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const r = db.transaction("kv").objectStore("kv").get(key);
+      r.onsuccess = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+    });
+  },
+  async set(key, val) {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("kv", "readwrite");
+      tx.objectStore("kv").put(val, key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+};
+
+let brandSaveTimer = null;
+function saveBrand() {
+  clearTimeout(brandSaveTimer);
+  brandSaveTimer = setTimeout(() => { BrandStore.set("brand", brand).catch(() => {}); }, 250);
+}
+
+async function loadBrand() {
+  try {
+    const saved = await BrandStore.get("brand");
+    if (saved) brand = { ...brand, ...saved };
+  } catch (e) {}
+  brandLoaded = true;
+}
+
+function brandIsEmpty() {
+  return !brand.logo && !brand.photos.length && !brand.handle;
+}
+
+// Shrink uploads so storage stays small and slides draw fast.
+function fileToDataURL(file, maxSide, keepAlpha) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * scale);
+      c.height = Math.round(img.height * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(keepAlpha ? c.toDataURL("image/png") : c.toDataURL("image/jpeg", 0.86));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("That image couldn't be opened. Try a JPG or PNG.")); };
+    img.src = url;
+  });
+}
+
+const imageCache = new Map();
+function loadImage(src) {
+  if (!src) return Promise.resolve(null);
+  if (imageCache.has(src)) return imageCache.get(src);
+  const p = new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+  imageCache.set(src, p);
+  return p;
+}
+
+let fontsReady = null;
+function ensureFonts() {
+  if (!fontsReady) {
+    const loads = [];
+    for (const s of SLIDE_STYLES) loads.push(`${s.headWeight} 80px "${s.head}"`);
+    loads.push(`400 40px "Inter"`, `600 40px "Inter"`, `700 40px "Inter"`);
+    fontsReady = Promise.all(loads.map(f => document.fonts ? document.fonts.load(f).catch(() => {}) : null))
+      .then(() => new Promise(r => setTimeout(r, 50)));
+  }
+  return fontsReady;
+}
+
+// ── Drawing helpers ──
+function hexToRgb(hex) {
+  const h = String(hex || "#000").replace("#", "");
+  const n = parseInt(h.length === 3 ? h.split("").map(c => c + c).join("") : h, 16) || 0;
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function richWords(text, upper) {
+  // *word* marks a highlighted word.
+  const out = [];
+  let hl = false;
+  for (let raw of String(text || "").split(/\s+/).filter(Boolean)) {
+    if (upper) raw = raw.toUpperCase();
+    let on = hl;
+    if (raw.startsWith("*")) { on = true; raw = raw.slice(1); hl = true; }
+    if (raw.endsWith("*")) { raw = raw.slice(0, -1); hl = false; }
+    else if (raw.includes("*")) { raw = raw.replace(/\*/g, ""); hl = false; }
+    if (raw) out.push({ w: raw, hl: on });
+  }
+  return out;
+}
+
+function wrapWords(ctx, words, maxW) {
+  const lines = [];
+  let line = [];
+  let width = 0;
+  const space = ctx.measureText(" ").width;
+  for (const word of words) {
+    const ww = ctx.measureText(word.w).width;
+    if (line.length && width + space + ww > maxW) {
+      lines.push(line); line = []; width = 0;
+    }
+    width += (line.length ? space : 0) + ww;
+    line.push(word);
+  }
+  if (line.length) lines.push(line);
+  return lines;
+}
+
+function fitRich(ctx, words, fontFor, maxW, maxH, start, min, lh) {
+  let size = start;
+  let lines;
+  while (true) {
+    ctx.font = fontFor(size);
+    lines = wrapWords(ctx, words, maxW);
+    const tooWide = lines.some(l => ctx.measureText(l.map(w => w.w).join(" ")).width > maxW);
+    if ((lines.length * size * lh <= maxH && !tooWide) || size <= min) break;
+    size -= 4;
+  }
+  return { size, lines, height: lines.length * size * lh };
+}
+
+function drawRichLines(ctx, fit, x, y, lh, color, hlColor) {
+  const space = ctx.measureText(" ").width;
+  fit.lines.forEach((line, i) => {
+    let cx = x;
+    const ly = y + i * fit.size * lh;
+    for (const word of line) {
+      ctx.fillStyle = word.hl ? hlColor : color;
+      ctx.fillText(word.w, cx, ly);
+      cx += ctx.measureText(word.w).width + space;
+    }
+  });
+}
+
+function drawCover(ctx, img, x, y, w, h) {
+  const s = Math.max(w / img.width, h / img.height);
+  const sw = w / s, sh = h / s;
+  ctx.drawImage(img, (img.width - sw) / 2, (img.height - sh) / 3, sw, sh, x, y, w, h);
+}
+
+function readableOn(bgHex) {
+  const [r, g, b] = hexToRgb(bgHex);
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? "#111111" : "#ffffff";
+}
+
+// Draws one slide onto a 1080x1350 canvas (Instagram portrait size).
+async function drawSlide(slide, index, total, kit) {
+  await ensureFonts();
+  const style = SLIDE_STYLES.find(s => s.id === kit.style) || SLIDE_STYLES[0];
+  const c = document.createElement("canvas");
+  c.width = SLIDE_W; c.height = SLIDE_H;
+  const ctx = c.getContext("2d");
+  ctx.textBaseline = "top";
+  const isCover = index === 0;
+  const isLast = index === total - 1 && total > 1;
+  const photo = slide.photo != null && kit.photos[slide.photo] ? await loadImage(kit.photos[slide.photo]) : null;
+  const logo = kit.logo ? await loadImage(kit.logo) : null;
+  const [br, bgG, bb] = hexToRgb(kit.bg);
+  const maxW = SLIDE_W - SLIDE_PAD * 2;
+  const headFont = size => `${style.headWeight} ${size}px "${style.head}", "Inter", sans-serif`;
+  const bodyFont = size => `400 ${size}px "Inter", sans-serif`;
+  const headLH = style.id === "bold" ? 0.98 : 1.12;
+
+  // Background
+  ctx.fillStyle = kit.bg;
+  ctx.fillRect(0, 0, SLIDE_W, SLIDE_H);
+
+  let textColor = kit.text;
+  let onAccent = false;
+  let footerTop = SLIDE_H - SLIDE_PAD - 64;
+
+  if (photo && (isCover || isLast)) {
+    // Full-bleed photo, fading into the brand background at the bottom.
+    drawCover(ctx, photo, 0, 0, SLIDE_W, SLIDE_H);
+    const g = ctx.createLinearGradient(0, SLIDE_H * 0.25, 0, SLIDE_H);
+    g.addColorStop(0, `rgba(${br},${bgG},${bb},0)`);
+    g.addColorStop(0.55, `rgba(${br},${bgG},${bb},0.82)`);
+    g.addColorStop(1, `rgba(${br},${bgG},${bb},0.97)`);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, SLIDE_W, SLIDE_H);
+  } else if (photo) {
+    // Content slide with a photo: photo panel at the top.
+    const ph = Math.round(SLIDE_H * 0.42);
+    ctx.save();
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(SLIDE_PAD, SLIDE_PAD + 70, maxW, ph, 28); else ctx.rect(SLIDE_PAD, SLIDE_PAD + 70, maxW, ph);
+    ctx.clip();
+    drawCover(ctx, photo, SLIDE_PAD, SLIDE_PAD + 70, maxW, ph);
+    ctx.restore();
+  } else if (isCover && style.id === "bold") {
+    ctx.fillStyle = kit.primary;
+    ctx.fillRect(0, 0, SLIDE_W, SLIDE_H);
+    textColor = readableOn(kit.primary);
+    onAccent = true;
+  }
+
+  const hlColor = onAccent ? textColor : kit.primary;
+  const headWords = richWords(slide.headline, style.upper);
+  const bodyText = String(slide.body || "").replace(/\*/g, "");
+
+  // Slide counter
+  ctx.font = `600 30px "Inter", sans-serif`;
+  ctx.fillStyle = textColor;
+  ctx.globalAlpha = 0.6;
+  if (!isCover) ctx.fillText(`${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`, SLIDE_PAD, SLIDE_PAD);
+  ctx.globalAlpha = 1;
+
+  if (isCover || isLast) {
+    // Big text, anchored low on photo slides and centred otherwise.
+    const head = fitRich(ctx, headWords, headFont, maxW, isCover ? 620 : 520, isCover ? 132 : 104, 56, headLH);
+    let body = null;
+    if (bodyText) {
+      ctx.font = bodyFont(42);
+      body = { lines: wrapWords(ctx, richWords(bodyText), maxW), size: 42 };
+    }
+    const bodyH = body ? body.lines.length * body.size * 1.4 + 36 : 0;
+    const blockH = 34 + head.height + bodyH;
+    const top = photo ? footerTop - 60 - blockH : Math.max(SLIDE_PAD + 80, (SLIDE_H - blockH) / 2 - 40);
+    ctx.fillStyle = hlColor;
+    ctx.fillRect(SLIDE_PAD, top, 90, 12);
+    ctx.font = headFont(head.size);
+    drawRichLines(ctx, head, SLIDE_PAD, top + 34, headLH, textColor, hlColor);
+    if (body) {
+      ctx.font = bodyFont(body.size);
+      ctx.globalAlpha = 0.88;
+      body.lines.forEach((l, i) => { ctx.fillStyle = textColor; ctx.fillText(l.map(w => w.w).join(" "), SLIDE_PAD, top + 34 + head.height + 36 + i * body.size * 1.4); });
+      ctx.globalAlpha = 1;
+    }
+  } else {
+    const minTop = photo ? SLIDE_PAD + 70 + Math.round(SLIDE_H * 0.42) + 56 : SLIDE_PAD + 120;
+    const avail = footerTop - 50 - minTop;
+    const head = fitRich(ctx, headWords, headFont, maxW, Math.min(avail * 0.55, photo ? 300 : 480), photo ? 84 : 108, 48, headLH);
+    let body = null;
+    if (bodyText) body = fitRich(ctx, richWords(bodyText), bodyFont, maxW, avail - head.height - 44, photo ? 44 : 52, 28, 1.42);
+    const blockH = head.height + (body ? 44 + body.height : 0);
+    // Text-only slides sit in the visual centre instead of hugging the top.
+    const top = photo ? minTop : Math.max(minTop, minTop + (avail - blockH) / 2 - 40);
+    ctx.fillStyle = hlColor;
+    if (!photo) ctx.fillRect(SLIDE_PAD, top - 40, 70, 10);
+    ctx.font = headFont(head.size);
+    drawRichLines(ctx, head, SLIDE_PAD, top, headLH, textColor, hlColor);
+    if (body) {
+      ctx.font = bodyFont(body.size);
+      ctx.globalAlpha = 0.85;
+      drawRichLines(ctx, body, SLIDE_PAD, top + head.height + 44, 1.42, textColor, textColor);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // Footer: logo or handle on the left, swipe cue on the right.
+  if (logo) {
+    const sc = Math.min(64 / logo.height, 280 / logo.width);
+    const dw = logo.width * sc, dh = logo.height * sc;
+    ctx.drawImage(logo, SLIDE_PAD, footerTop + (64 - dh) / 2, dw, dh);
+  } else if (kit.handle) {
+    ctx.font = `600 32px "Inter", sans-serif`;
+    ctx.fillStyle = textColor;
+    ctx.fillText(kit.handle.startsWith("@") ? kit.handle : "@" + kit.handle, SLIDE_PAD, footerTop + 16);
+  }
+  if (logo && kit.handle) {
+    ctx.font = `600 30px "Inter", sans-serif`;
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = 0.75;
+    const h = kit.handle.startsWith("@") ? kit.handle : "@" + kit.handle;
+    if (isLast || total === 1) ctx.fillText(h, SLIDE_W - SLIDE_PAD - ctx.measureText(h).width, footerTop + 17);
+    ctx.globalAlpha = 1;
+  }
+  if (!isLast && total > 1) {
+    ctx.font = `600 30px "Inter", sans-serif`;
+    const t = "Swipe  →";
+    ctx.fillStyle = textColor;
+    ctx.globalAlpha = 0.8;
+    ctx.fillText(t, SLIDE_W - SLIDE_PAD - ctx.measureText(t).width, footerTop + 17);
+    ctx.globalAlpha = 1;
+  }
+  return c;
+}
+
+function canvasToBlob(c, type, q) {
+  return new Promise(resolve => c.toBlob(b => resolve(b), type || "image/png", q));
+}
+
+// ── Tiny ZIP writer (no compression, PNGs are already compressed) ──
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(bytes) {
+  let c = 0xffffffff;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+function makeZip(files) {
+  const enc = new TextEncoder();
+  const parts = [];
+  const central = [];
+  let offset = 0;
+  for (const f of files) {
+    const name = enc.encode(f.name);
+    const crc = crc32(f.data);
+    const local = new DataView(new ArrayBuffer(30));
+    local.setUint32(0, 0x04034b50, true); local.setUint16(4, 20, true);
+    local.setUint16(8, 0, true); local.setUint16(12, 33, true);
+    local.setUint32(14, crc, true); local.setUint32(18, f.data.length, true); local.setUint32(22, f.data.length, true);
+    local.setUint16(26, name.length, true);
+    parts.push(local, name, f.data);
+    const cd = new DataView(new ArrayBuffer(46));
+    cd.setUint32(0, 0x02014b50, true); cd.setUint16(4, 20, true); cd.setUint16(6, 20, true);
+    cd.setUint16(14, 33, true);
+    cd.setUint32(16, crc, true); cd.setUint32(20, f.data.length, true); cd.setUint32(24, f.data.length, true);
+    cd.setUint16(28, name.length, true); cd.setUint32(42, offset, true);
+    central.push(cd, name);
+    offset += 30 + name.length + f.data.length;
+  }
+  const cdSize = central.reduce((s, p) => s + p.byteLength, 0);
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true);
+  end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+  end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+  return new Blob([...parts, ...central, end], { type: "application/zip" });
+}
+
+function slugify(s) {
+  return String(s || "carousel").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "carousel";
+}
+
+function downloadBlob(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+
+async function carouselFiles(idea) {
+  const car = idea.carousel;
+  const files = [];
+  for (let i = 0; i < car.slides.length; i++) {
+    const c = await drawSlide(car.slides[i], i, car.slides.length, brand);
+    const blob = await canvasToBlob(c, "image/png");
+    files.push(new File([blob], `slide-${String(i + 1).padStart(2, "0")}.png`, { type: "image/png" }));
+  }
+  return files;
+}
+
+async function downloadCarouselZip(idea, btn) {
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = "Preparing...";
+  try {
+    const files = await carouselFiles(idea);
+    const zipFiles = [];
+    for (const f of files) zipFiles.push({ name: f.name, data: new Uint8Array(await f.arrayBuffer()) });
+    zipFiles.push({ name: "caption.txt", data: new TextEncoder().encode(idea.carousel.caption || "") });
+    downloadBlob(makeZip(zipFiles), slugify(idea.title) + ".zip");
+  } catch (e) {
+    alert("The download didn't work. Try again.");
+  }
+  btn.disabled = false; btn.textContent = label;
+}
+
+async function shareCarousel(idea, btn) {
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = "Preparing...";
+  try {
+    const files = await carouselFiles(idea);
+    await navigator.share({ files, title: idea.title });
+  } catch (e) {
+    if (e && e.name !== "AbortError") alert("Saving didn't work on this device. Use Download instead.");
+  }
+  btn.disabled = false; btn.textContent = label;
+}
+
+function canShareFiles() {
+  try {
+    return !!(navigator.canShare && navigator.canShare({ files: [new File([new Blob(["x"])], "x.png", { type: "image/png" })] }));
+  } catch (e) { return false; }
+}
+
+// ── AI: write the slides ──
+function buildCarouselPrompt(idea) {
+  return `You write Instagram carousels for coaches and service businesses. Each slide is read in about 3 seconds, so every slide makes one point.
+
+${ciContext()}
+
+THE IDEA:
+- Title: ${idea.title}
+- Pillar: ${idea.pillar}
+- Funnel stage: ${idea.stage}
+- Hook: ${idea.hook}
+- Angle: ${idea.angle}
+- CTA: ${idea.cta}
+
+TASK: Write a 6 to 8 slide carousel and its caption.
+
+RULES:
+- Slide 1 is the cover. Its headline is the hook, tightened to 12 words or fewer. Body is empty or under 10 words.
+- Middle slides: one point each. Headline 8 words or fewer. Body 30 words or fewer, plain and specific.
+- Last slide is the CTA: headline is the action, body says what they get.
+- In every headline, wrap the 1 or 2 most important words in *asterisks* so they can be highlighted.
+- Never invent numbers, names or results. Use [their detail] where the creator must fill something in.
+- The caption is 3 to 6 short sentences, ends with the CTA, and has no hashtags.
+
+${HUMANIZER_SHORT}
+
+OUTPUT: Return only JSON, no other text:
+{"slides": [{"headline": "...", "body": "..."}], "caption": "..."}`;
+}
+
+function parseCarousel(text) {
+  const start = text.indexOf("{"), end = text.lastIndexOf("}");
+  if (start === -1 || end <= start) throw new Error("The carousel came back in the wrong format. Try again.");
+  let obj;
+  try { obj = JSON.parse(text.slice(start, end + 1)); } catch (e) { throw new Error("The carousel came back in the wrong format. Try again."); }
+  const slides = (obj.slides || []).filter(s => s && s.headline).slice(0, 10).map(s => ({
+    headline: cleanCopy(s.headline),
+    body: cleanCopy(s.body || ""),
+    photo: null
+  }));
+  if (slides.length < 2) throw new Error("The carousel came back too short. Try again.");
+  return { slides, caption: cleanCopy(obj.caption || "") };
+}
+
+function assignPhotos(car) {
+  const n = brand.photos.length;
+  car.slides.forEach(s => { s.photo = null; });
+  if (!n) return;
+  car.slides[0].photo = 0;
+  if (car.slides.length > 2) car.slides[car.slides.length - 1].photo = n > 1 ? 1 : 0;
+  if (n > 2 && car.slides.length > 4) car.slides[Math.floor(car.slides.length / 2)].photo = 2;
+}
+
+async function generateCarousel(id) {
+  const idea = cstate.ideas.find(i => i.id === id);
+  if (!idea) return;
+  idea.carouselLoading = true;
+  idea.carouselError = "";
+  render();
+  try {
+    const text = await callAPI(buildCarouselPrompt(idea), 2200);
+    const car = parseCarousel(text);
+    assignPhotos(car);
+    idea.carousel = car;
+    cstate.carouselSlide = 0;
+  } catch (e) {
+    idea.carouselError = e.message || "Something went wrong. Try again.";
+  }
+  idea.carouselLoading = false;
+  ciSave();
+  render();
+}
+
+function openCarousel(id) {
+  const idea = cstate.ideas.find(i => i.id === id);
+  if (!idea) return;
+  cstate.view = "carousel";
+  cstate.carouselId = id;
+  cstate.carouselSlide = 0;
+  render();
+  window.scrollTo(0, 0);
+  if (!idea.carousel && !idea.carouselLoading) generateCarousel(id);
+}
+
+// ── VIEW: Brand kit ──
+function renderBrandKit() {
+  const wrap = document.createElement("div");
+  const back = cstate.brandReturn || "ideas";
+  wrap.appendChild(el("button", { class: "btn btn-ghost btn-sm", style: { marginBottom: "20px" }, onclick: () => { cstate.view = back; render(); window.scrollTo(0, 0); } }, back === "carousel" ? "← Back to carousel" : "← Back"));
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Brand kit"),
+    el("h1", { class: "view-title" }, "Make the slides look like you."),
+    el("p", { class: "view-desc" }, "Add your photos, logo and colours once. Every carousel uses them. They stay on this device and are never uploaded.")
+  ));
+
+  const preview = el("div", { class: "bk-preview" });
+  const previewImg = el("img", { class: "bk-preview-img", alt: "Sample slide" });
+  preview.appendChild(previewImg);
+  let pvTimer;
+  const refreshPreview = () => {
+    clearTimeout(pvTimer);
+    pvTimer = setTimeout(async () => {
+      const sample = { headline: "Your hook goes *right here*", body: "This is how your slides will look.", photo: brand.photos.length ? 0 : null };
+      const c = await drawSlide(sample, 0, 6, brand);
+      previewImg.src = c.toDataURL("image/jpeg", 0.8);
+    }, 120);
+  };
+  wrap.appendChild(preview);
+
+  // Handle
+  const hGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, "Your handle"), el("p", { class: "ci-group-hint" }, "Shown on the slides, e.g. @yourname"));
+  const hInput = el("input", { class: "text-input", placeholder: "@yourhandle", autocapitalize: "off", spellcheck: "false" });
+  hInput.value = brand.handle || "";
+  hInput.addEventListener("input", () => { brand.handle = hInput.value.trim(); saveBrand(); refreshPreview(); });
+  hGroup.appendChild(hInput);
+  wrap.appendChild(hGroup);
+
+  // Logo
+  const lGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, "Logo"), el("p", { class: "ci-group-hint" }, "A PNG with a see-through background looks best."));
+  const lRow = el("div", { class: "bk-row" });
+  if (brand.logo) {
+    lRow.appendChild(el("div", { class: "bk-logo-box" }, el("img", { src: brand.logo, alt: "Logo" })));
+    lRow.appendChild(el("button", { class: "copy-btn", onclick: () => { brand.logo = ""; saveBrand(); render(); } }, "Remove"));
+  }
+  const lInput = el("input", { type: "file", accept: "image/*", style: { display: "none" } });
+  lInput.addEventListener("change", async () => {
+    const f = lInput.files[0];
+    if (!f) return;
+    try { brand.logo = await fileToDataURL(f, 600, true); saveBrand(); render(); } catch (e) { alert(e.message); }
+  });
+  lRow.appendChild(el("button", { class: "btn btn-secondary btn-sm", onclick: () => lInput.click() }, brand.logo ? "Change logo" : "Upload logo"));
+  lRow.appendChild(lInput);
+  lGroup.appendChild(lRow);
+  wrap.appendChild(lGroup);
+
+  // Photos
+  const pGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, `Photos of you (${brand.photos.length} of 12)`), el("p", { class: "ci-group-hint" }, "Training, coaching, lifestyle, headshots. The first one is used on cover slides."));
+  const grid = el("div", { class: "bk-photos" });
+  brand.photos.forEach((src, i) => {
+    const cell = el("div", { class: "bk-photo" }, el("img", { src, alt: `Photo ${i + 1}` }));
+    if (i > 0) cell.appendChild(el("button", { class: "bk-photo-btn bk-first", title: "Make this the cover photo", onclick: () => {
+      const [p] = brand.photos.splice(i, 1); brand.photos.unshift(p); saveBrand(); render();
+    } }, "★"));
+    cell.appendChild(el("button", { class: "bk-photo-btn", title: "Remove", onclick: () => {
+      brand.photos.splice(i, 1); saveBrand(); render();
+    } }, "×"));
+    grid.appendChild(cell);
+  });
+  const pInput = el("input", { type: "file", accept: "image/*", multiple: "true", style: { display: "none" } });
+  pInput.addEventListener("change", async () => {
+    const files = Array.from(pInput.files || []).slice(0, 12 - brand.photos.length);
+    for (const f of files) {
+      try { brand.photos.push(await fileToDataURL(f, 1600, false)); } catch (e) {}
+    }
+    saveBrand(); render();
+  });
+  if (brand.photos.length < 12) grid.appendChild(el("button", { class: "bk-photo bk-add", onclick: () => pInput.click() }, "+ Add photos"));
+  pGroup.appendChild(grid);
+  pGroup.appendChild(pInput);
+  wrap.appendChild(pGroup);
+
+  // Colours
+  const cGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, "Colours"), el("p", { class: "ci-group-hint" }, "Pick a starting point, then fine-tune your exact brand colours."));
+  const presets = el("div", { class: "ci-pills" });
+  for (const p of BRAND_PRESETS) {
+    const on = brand.preset === p.id;
+    const sw = el("span", { class: "bk-swatch", style: { background: `linear-gradient(135deg, ${p.bg} 55%, ${p.primary} 55%)` } });
+    presets.appendChild(el("button", { class: "ci-pill" + (on ? " on" : ""), onclick: () => {
+      brand.preset = p.id; brand.bg = p.bg; brand.text = p.text; brand.primary = p.primary; saveBrand(); render();
+    } }, sw, p.label));
+  }
+  cGroup.appendChild(presets);
+  const pickers = el("div", { class: "bk-pickers" });
+  for (const [key, label] of [["bg", "Background"], ["text", "Text"], ["primary", "Highlight"]]) {
+    const inp = el("input", { type: "color", class: "bk-color" });
+    inp.value = brand[key];
+    inp.addEventListener("input", () => { brand[key] = inp.value; brand.preset = "custom"; saveBrand(); refreshPreview(); });
+    pickers.appendChild(el("label", { class: "bk-picker" }, inp, el("span", {}, label)));
+  }
+  cGroup.appendChild(pickers);
+  wrap.appendChild(cGroup);
+
+  // Style
+  const sGroup = el("div", { class: "ci-group" }, el("div", { class: "ci-group-title" }, "Slide style"), el("p", { class: "ci-group-hint" }, "Sets the headline font and the feel of the slides."));
+  const styles = el("div", { class: "bk-styles" });
+  for (const s of SLIDE_STYLES) {
+    styles.appendChild(el("button", { class: "ci-pill bk-style" + (brand.style === s.id ? " on" : ""), onclick: () => { brand.style = s.id; saveBrand(); render(); } },
+      el("span", { class: "bk-style-sample", style: { fontFamily: `"${s.head}", Inter, sans-serif`, fontWeight: String(s.headWeight) } }, s.sample),
+      el("small", {}, s.label)));
+  }
+  sGroup.appendChild(styles);
+  wrap.appendChild(sGroup);
+
+  wrap.appendChild(el("button", { class: "btn btn-primary btn-full", style: { marginTop: "32px" }, onclick: () => { cstate.view = back; render(); window.scrollTo(0, 0); } }, "Done"));
+  refreshPreview();
+  return wrap;
+}
+
+// ── VIEW: Carousel builder ──
+function renderCarouselView() {
+  const idea = cstate.ideas.find(i => i.id === cstate.carouselId);
+  const wrap = document.createElement("div");
+  wrap.appendChild(el("button", { class: "btn btn-ghost btn-sm", style: { marginBottom: "20px" }, onclick: () => { cstate.view = "ideas"; render(); } }, "← Back to ideas"));
+  if (!idea) { wrap.appendChild(el("div", { class: "ci-empty" }, "That idea isn't there anymore.")); return wrap; }
+
+  wrap.appendChild(el("div", { class: "view-header" },
+    el("div", { class: "view-eyebrow" }, "Carousel"),
+    el("h1", { class: "view-title" }, idea.title || "Your carousel"),
+    el("p", { class: "view-desc" }, idea.hook)
+  ));
+
+  if (brandIsEmpty()) {
+    wrap.appendChild(el("div", { class: "bk-nudge" },
+      el("span", {}, "Add your photos, logo and colours so the slides look like your brand."),
+      el("button", { class: "btn btn-secondary btn-sm", onclick: () => { cstate.brandReturn = "carousel"; cstate.view = "brand"; render(); window.scrollTo(0, 0); } }, "Set up brand kit")
+    ));
+  }
+
+  if (idea.carouselLoading) {
+    wrap.appendChild(el("div", { class: "loading-wrap" }, el("div", { class: "spinner" }), el("div", { class: "loading-msg" }, "Writing your slides...")));
+    return wrap;
+  }
+  if (idea.carouselError) {
+    wrap.appendChild(el("div", { class: "error-box" }, idea.carouselError));
+    wrap.appendChild(el("button", { class: "btn btn-primary", onclick: () => generateCarousel(idea.id) }, "Try again"));
+    return wrap;
+  }
+  const car = idea.carousel;
+  if (!car) return wrap;
+  const total = car.slides.length;
+  if (cstate.carouselSlide >= total) cstate.carouselSlide = total - 1;
+
+  // Slide strip
+  const strip = el("div", { class: "car-strip" });
+  const thumbs = [];
+  car.slides.forEach((s, i) => {
+    const img = el("img", { class: "car-thumb" + (i === cstate.carouselSlide ? " active" : ""), alt: `Slide ${i + 1}` });
+    img.addEventListener("click", () => { cstate.carouselSlide = i; render(); });
+    thumbs.push(img);
+    strip.appendChild(el("div", { class: "car-thumb-wrap" }, img, el("span", { class: "car-thumb-num" }, String(i + 1))));
+  });
+  wrap.appendChild(strip);
+  const paint = async i => {
+    const c = await drawSlide(car.slides[i], i, total, brand);
+    if (thumbs[i]) thumbs[i].src = c.toDataURL("image/jpeg", 0.82);
+  };
+  (async () => { for (let i = 0; i < total; i++) await paint(i); })();
+  setTimeout(() => {
+    const w = thumbs[cstate.carouselSlide] && thumbs[cstate.carouselSlide].parentNode;
+    if (w) strip.scrollLeft = Math.max(0, w.offsetLeft - strip.offsetLeft - 16);
+  }, 0);
+
+  // Editor for the selected slide
+  const idx = cstate.carouselSlide;
+  const slide = car.slides[idx];
+  const ed = el("div", { class: "car-editor" });
+  ed.appendChild(el("div", { class: "ci-group-title" }, `Editing slide ${idx + 1} of ${total}`));
+  ed.appendChild(el("p", { class: "ci-group-hint" }, "Wrap a word in *stars* to highlight it."));
+  let t;
+  const repaint = () => { clearTimeout(t); t = setTimeout(() => { paint(idx); ciSave(); }, 250); };
+  const hTa = el("textarea", { class: "niche-textarea", rows: "2" });
+  hTa.value = slide.headline;
+  hTa.addEventListener("input", () => { slide.headline = hTa.value; repaint(); });
+  const bTa = el("textarea", { class: "niche-textarea", rows: "3", placeholder: "Body text (optional)" });
+  bTa.value = slide.body;
+  bTa.addEventListener("input", () => { slide.body = bTa.value; repaint(); });
+  ed.appendChild(el("label", { class: "niche-label" }, "Headline"));
+  ed.appendChild(hTa);
+  ed.appendChild(el("label", { class: "niche-label", style: { marginTop: "12px", display: "block" } }, "Body"));
+  ed.appendChild(bTa);
+
+  if (brand.photos.length) {
+    ed.appendChild(el("label", { class: "niche-label", style: { marginTop: "14px", display: "block" } }, "Photo on this slide"));
+    const row = el("div", { class: "car-photo-row" });
+    row.appendChild(el("button", { class: "car-photo-opt car-none" + (slide.photo == null ? " on" : ""), onclick: () => { slide.photo = null; ciSave(); render(); } }, "None"));
+    brand.photos.forEach((src, pi) => {
+      row.appendChild(el("button", { class: "car-photo-opt" + (slide.photo === pi ? " on" : ""), onclick: () => { slide.photo = pi; ciSave(); render(); } }, el("img", { src, alt: "" })));
+    });
+    ed.appendChild(row);
+  }
+
+  const order = el("div", { class: "ci-actions", style: { marginTop: "14px" } });
+  if (idx > 0) order.appendChild(el("button", { class: "copy-btn", onclick: () => { [car.slides[idx - 1], car.slides[idx]] = [car.slides[idx], car.slides[idx - 1]]; cstate.carouselSlide = idx - 1; ciSave(); render(); } }, "← Move left"));
+  if (idx < total - 1) order.appendChild(el("button", { class: "copy-btn", onclick: () => { [car.slides[idx + 1], car.slides[idx]] = [car.slides[idx], car.slides[idx + 1]]; cstate.carouselSlide = idx + 1; ciSave(); render(); } }, "Move right →"));
+  if (total < 10) order.appendChild(el("button", { class: "copy-btn", onclick: () => { car.slides.splice(idx + 1, 0, { headline: "New *slide*", body: "", photo: null }); cstate.carouselSlide = idx + 1; ciSave(); render(); } }, "+ Add slide"));
+  if (total > 2) order.appendChild(el("button", { class: "copy-btn", onclick: () => { car.slides.splice(idx, 1); cstate.carouselSlide = Math.max(0, idx - 1); ciSave(); render(); } }, "Delete slide"));
+  ed.appendChild(order);
+  wrap.appendChild(ed);
+
+  // Caption
+  const capBox = el("div", { class: "script-box", style: { marginTop: "18px" } });
+  const capHead = el("div", { class: "script-box-header" }, el("div", { class: "script-box-title" }, "Caption"), makeCopyBtn(car.caption, "Copy caption"));
+  const capTa = el("textarea", { class: "niche-textarea car-caption", rows: "6" });
+  capTa.value = car.caption;
+  capTa.addEventListener("input", () => { car.caption = capTa.value; ciSave(); });
+  capBox.appendChild(capHead);
+  capBox.appendChild(el("div", { style: { padding: "14px" } }, capTa));
+  wrap.appendChild(capBox);
+
+  // Actions
+  const actions = el("div", { class: "car-actions" });
+  if (canShareFiles()) {
+    const shareBtn = el("button", { class: "btn btn-primary btn-full" }, "Save slides to my phone");
+    shareBtn.addEventListener("click", () => shareCarousel(idea, shareBtn));
+    actions.appendChild(shareBtn);
+  }
+  const zipBtn = el("button", { class: "btn btn-full " + (canShareFiles() ? "btn-secondary" : "btn-primary") }, "Download all slides (ZIP)");
+  zipBtn.addEventListener("click", () => downloadCarouselZip(idea, zipBtn));
+  actions.appendChild(zipBtn);
+  const one = el("button", { class: "btn btn-ghost btn-full" }, `Download slide ${idx + 1} only`);
+  one.addEventListener("click", async () => {
+    const c = await drawSlide(car.slides[idx], idx, total, brand);
+    downloadBlob(await canvasToBlob(c, "image/png"), `slide-${String(idx + 1).padStart(2, "0")}.png`);
+  });
+  actions.appendChild(one);
+  actions.appendChild(el("div", { class: "car-actions-row" },
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => { cstate.brandReturn = "carousel"; cstate.view = "brand"; render(); window.scrollTo(0, 0); } }, "Edit brand kit"),
+    el("button", { class: "btn btn-ghost btn-sm", onclick: () => { if (confirm("Rewrite all slides? Your edits will be replaced.")) generateCarousel(idea.id); } }, "Rewrite slides")
+  ));
+  wrap.appendChild(actions);
+  return wrap;
+}
+
+// ═══════════════════════════════════════════
+// ACCESS CODE
+// ═══════════════════════════════════════════
+
+const ACCESS_KEY = "fcm-access-code";
+let accessCode = "";
+let gateMessage = "";
+try { accessCode = localStorage.getItem(ACCESS_KEY) || ""; } catch (e) {}
+
+function lockOut(msg) {
+  accessCode = "";
+  gateMessage = msg || "";
+  try { localStorage.removeItem(ACCESS_KEY); } catch (e) {}
+  render();
+  window.scrollTo(0, 0);
+}
+
+let gateProbed = false;
+function renderGate() {
+  const wrap = el("div", { class: "gate-wrap" });
+  if (!gateProbed) {
+    // If no access codes are configured on the server, the tool is open: skip the gate.
+    gateProbed = true;
+    fetch("/api/check-code", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: "" }) })
+      .then(r => r.json()).then(d => { if (d && d.ok && d.open) { accessCode = "open"; render(); } }).catch(() => {});
+  }
+  wrap.appendChild(el("div", { class: "gate-logo" }, "⚡"));
+  wrap.appendChild(el("h1", { class: "gate-title" }, "FCM Script Builder"));
+  wrap.appendChild(el("p", { class: "gate-sub" }, "Enter the access code your coach gave you. You only need to do this once on each device."));
+  const input = el("input", { class: "text-input gate-input", placeholder: "FCM-XXXX-XXXX-XXXX", autocomplete: "off", autocapitalize: "characters", spellcheck: "false" });
+  const msg = el("div", { class: "gate-msg" }, gateMessage);
+  const btn = el("button", { class: "btn btn-primary btn-full" }, "Unlock");
+  async function submit() {
+    const code = input.value.trim().toUpperCase().replace(/\s+/g, "");
+    if (!code) return;
+    btn.disabled = true; btn.textContent = "Checking...";
+    msg.textContent = "";
+    try {
+      const res = await fetch("/api/check-code", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        accessCode = code; gateMessage = "";
+        try { localStorage.setItem(ACCESS_KEY, code); } catch (e) {}
+        render();
+        return;
+      }
+      msg.textContent = data.error || "That code isn't active. Check it and try again.";
+    } catch (e) {
+      msg.textContent = "Couldn't reach the server. Check your connection and try again.";
+    }
+    btn.disabled = false; btn.textContent = "Unlock";
+  }
+  btn.addEventListener("click", submit);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+  wrap.appendChild(input);
+  wrap.appendChild(msg);
+  wrap.appendChild(btn);
+  setTimeout(() => input.focus(), 0);
+  return wrap;
+}
+
 // ═══════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════
 
 render();
+loadBrand().then(() => { if (state.section === "content") render(); });
 </script>
 
 </body>
