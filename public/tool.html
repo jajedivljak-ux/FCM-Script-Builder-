@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ad Script Builder</title>
-<!-- build: 2026-10-03 v3 captions+refine+clean -->
+<!-- build: 2026-10-18 v4 retargeting -->
 <style>html,body{margin:0;background:#0d0d0d}</style>
 </head>
 <body>
@@ -31,6 +31,8 @@
   --blue-dim: rgba(74,122,255,0.12);
   --green: #4a8a4a;
   --green-dim: rgba(74,138,74,0.12);
+  --purple: #a259ff;
+  --purple-dim: rgba(162,89,255,0.12);
   --success: #4a8a4a;
   --radius: 10px;
   --radius-sm: 6px;
@@ -216,6 +218,11 @@ body {
   border-color: var(--green);
 }
 
+.sel-card.selected-purple {
+  background: var(--purple-dim);
+  border-color: var(--purple);
+}
+
 .sel-card .card-emoji {
   font-size: 22px;
   margin-bottom: 10px;
@@ -237,6 +244,7 @@ body {
 
 .sel-card .card-tagline.blue { color: var(--blue); }
 .sel-card .card-tagline.green { color: var(--green); }
+.sel-card .card-tagline.purple { color: var(--purple); }
 
 .sel-card .card-desc {
   font-size: 13px;
@@ -715,6 +723,7 @@ body {
 .tag-chip.orange { background: var(--accent-dim2); border-color: var(--accent); color: var(--accent); }
 .tag-chip.blue { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
 .tag-chip.green { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.tag-chip.purple { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
 
 .script-box {
   background: var(--card);
@@ -947,15 +956,16 @@ body {
 const AD_MODES = {
   direct: { id: "direct", label: "Direct Offer", emoji: "🎯", tagline: "Convert viewers into paying clients.", description: "The goal is a sale or a booked call. You're asking someone to invest money or time. Needs the most trust, the strongest proof, and a clear risk reversal. Best for warm or solution-aware audiences.", bestFor: "Stage 3-5 audiences. Retargeting, warm followers, people who already know you or your niche.", notFor: "Cold traffic who've never heard of you. Pitching too early is the #1 reason ads don't convert.", color: "#e8500a", recommendedStages: [3, 4, 5] },
   follower: { id: "follower", label: "Follow Me", emoji: "👥", tagline: "Grow your audience with the right people.", description: "The goal is the follow. No pitch, no offer, no risk reversal. You're selling your content and your perspective. The CTA is always: follow me for daily content on [their pain or desired outcome].", bestFor: "Stage 1-2 cold audiences. People who feel the pain but aren't ready to buy. Build the audience first, sell later.", notFor: "People who are ready to buy. Don't waste a hot lead on a follow ad.", color: "#4a7aff", recommendedStages: [1, 2] },
-  indirect: { id: "indirect", label: "Indirect Offer", emoji: "🎁", tagline: "Give value first. Earn the right to sell later.", description: "The goal is an opt-in, a free training claim, or a lead magnet download. Lower commitment than a direct offer so it works on colder audiences. The risk reversal is implicit: it's free. Your job is making the freebie feel urgent and valuable.", bestFor: "Stage 2-3 audiences. Cold traffic who feel the pain and are open to solutions but aren't ready to invest yet.", notFor: "Stage 4-5 audiences who already know you. Don't send warm leads to a freebie when they're ready for the real thing.", color: "#4a8a4a", recommendedStages: [2, 3] }
+  indirect: { id: "indirect", label: "Indirect Offer", emoji: "🎁", tagline: "Give value first. Earn the right to sell later.", description: "The goal is an opt-in, a free training claim, or a lead magnet download. Lower commitment than a direct offer so it works on colder audiences. The risk reversal is implicit: it's free. Your job is making the freebie feel urgent and valuable.", bestFor: "Stage 2-3 audiences. Cold traffic who feel the pain and are open to solutions but aren't ready to invest yet.", notFor: "Stage 4-5 audiences who already know you. Don't send warm leads to a freebie when they're ready for the real thing.", color: "#4a8a4a", recommendedStages: [2, 3] },
+  retarget: { id: "retarget", label: "Retargeting", emoji: "🔁", tagline: "Close the people who already know you.", description: "The goal is to convert someone who has already seen your content, watched your VSL, visited your page, or clicked an ad and didn't act. No introductions, no re-explaining. Name the thing stopping them, dismantle it, make the next step easy.", bestFor: "Stage 4-5 audiences only. Video viewers, page visitors, VSL watchers, lead-form abandoners, engaged followers who haven't booked.", notFor: "Cold traffic. A retargeting script assumes they know you. Shown to strangers it makes no sense and wastes spend.", color: "#a259ff", recommendedStages: [4, 5] }
 };
 
 const AWARENESS_STAGES = [
   { id: "unaware", level: 1, label: "Unaware", tagline: "They don't know they have a problem yet.", description: "Your audience hasn't connected their situation to a problem that needs solving. They're living with a hidden pain they haven't named yet.", whoLivesHere: "The broadest possible audience. Scrollers who've never searched for a solution, never complained about the problem out loud, but are quietly living it every day.", whenToUse: "Rarely worth advertising here unless you have a large budget and a long-term brand play. Most small businesses can't afford the slow ROI. Follower ads work better here than offers.", commonMistake: "Jumping straight to a solution. If they don't know they have a problem, an offer means nothing.", hookStrategy: "Lead with a bold, provocative statement about their world. Make them feel seen before they know why.", bestModes: ["follower"] },
   { id: "problem_aware", level: 2, label: "Problem Aware", tagline: "They feel the pain, but don't know a solution exists.", description: "They know something is wrong. They're frustrated, stuck, or burned out. But they haven't started searching for answers yet.", whoLivesHere: "The majority of your cold traffic on Meta. People scrolling their feed who feel the problem daily but haven't gone looking for a fix. Highest volume stage.", whenToUse: "Where most of your cold ad spend should go. Lead with the pain, introduce the idea that a solution exists. Follower ads and indirect offers work best here.", commonMistake: "Leading with your offer or credentials. They don't care yet. They need to feel heard first.", hookStrategy: "Name the exact pain they feel every day. Agitate it so they lean in, then introduce the idea that a solution exists.", bestModes: ["follower", "indirect"] },
   { id: "solution_aware", level: 3, label: "Solution Aware", tagline: "They know solutions exist, but haven't found you.", description: "They've been looking. They've maybe tried a few things. They're actively comparing options and in research mode.", whoLivesHere: "Warmer cold traffic. They've Googled the problem, followed accounts in the niche, maybe bought something that didn't work. High intent, still wide audience.", whenToUse: "The sweet spot for direct response. Your unique mechanism matters most here. Indirect offers also work well to capture leads who aren't quite ready to buy.", commonMistake: "Making the same claims as everyone else. A solution-aware buyer will scroll past if your ad sounds like every other coach.", hookStrategy: "Lead with your unique mechanism or method. Why is YOUR approach different from everything else they've seen?", bestModes: ["direct", "indirect"] },
-  { id: "product_aware", level: 4, label: "Product Aware", tagline: "They know you, but haven't committed.", description: "They've seen your content or your offer. Something is stopping them. An objection, doubt, timing, or price.", whoLivesHere: "Retargeting audiences. People who've watched your videos, visited your page, or clicked an ad but didn't convert. Smaller audience, significantly higher intent.", whenToUse: "Retargeting campaigns. Much higher conversion rates. This is where you resolve the objection and make the decision easy. Direct offer only.", commonMistake: "Re-explaining what you do. They already know. They need their objection resolved and a reason to act now.", hookStrategy: "Address the objection head-on. Name the thing stopping them, then dismantle it with proof and risk reversal.", bestModes: ["direct"] },
-  { id: "most_aware", level: 5, label: "Most Aware", tagline: "They know you and your offer. They just need a reason to act now.", description: "They're warm. They've been following you, they trust you. They just need urgency, a new result, or a final push.", whoLivesHere: "Your existing community, email list, past buyers. Tiny audience, highest conversion rate of any stage.", whenToUse: "Launches, promos, re-engagement. Keep it short. Get straight to the reason to act now. Skip all education.", commonMistake: "Over-explaining to someone who already knows. Length kills urgency here. Get in, make the case, get out.", hookStrategy: "Lead straight to the offer. Use scarcity, urgency, or a new result. Don't re-explain what you do.", bestModes: ["direct"] }
+  { id: "product_aware", level: 4, label: "Product Aware", tagline: "They know you, but haven't committed.", description: "They've seen your content or your offer. Something is stopping them. An objection, doubt, timing, or price.", whoLivesHere: "Retargeting audiences. People who've watched your videos, visited your page, or clicked an ad but didn't convert. Smaller audience, significantly higher intent.", whenToUse: "Retargeting campaigns. Much higher conversion rates. This is where you resolve the objection and make the decision easy. Direct offer only.", commonMistake: "Re-explaining what you do. They already know. They need their objection resolved and a reason to act now.", hookStrategy: "Address the objection head-on. Name the thing stopping them, then dismantle it with proof and risk reversal.", bestModes: ["retarget", "direct"] },
+  { id: "most_aware", level: 5, label: "Most Aware", tagline: "They know you and your offer. They just need a reason to act now.", description: "They're warm. They've been following you, they trust you. They just need urgency, a new result, or a final push.", whoLivesHere: "Your existing community, email list, past buyers. Tiny audience, highest conversion rate of any stage.", whenToUse: "Launches, promos, re-engagement. Keep it short. Get straight to the reason to act now. Skip all education.", commonMistake: "Over-explaining to someone who already knows. Length kills urgency here. Get in, make the case, get out.", hookStrategy: "Lead straight to the offer. Use scarcity, urgency, or a new result. Don't re-explain what you do.", bestModes: ["retarget", "direct"] }
 ];
 
 const SOPHISTICATION_LEVELS = [
@@ -1061,6 +1071,42 @@ const FRAMEWORKS = {
     { id: "lesson", label: "The Lesson", tip: "One clear, specific insight.", placeholder: "e.g. The lesson: you don't need [false assumption], you need [specific truth]..." },
     { id: "introduce_freebie", label: "Introduce the Freebie", tip: "Present your free resource by its specific name.", placeholder: "e.g. I took everything I learned and built it into a free [type] called [Specific Name]..." },
     { id: "cta_indirect", label: "CTA", tip: "One action.", placeholder: "Write your CTA here...", ctaOptions: "indirect" }
+  ]},
+  rt_objection: { id: "rt_objection", mode: "retarget", label: "Objection Crusher", description: "Name the one thing stopping them, then take it apart with proof and a guarantee. The workhorse retargeting ad.", steps: [
+    { id: "hook", label: "Hook", tip: "Call out that they've seen you and haven't acted. Make it feel like you're talking to them specifically.", placeholder: "e.g. You watched the whole training and still didn't book. I know why." },
+    { id: "objection", label: "The Objection", tip: "Name the exact thing stopping them. Price, time, 'what if it doesn't work for me', 'I'll do it myself'. Pick the one you hear most.", placeholder: "e.g. You're thinking: what if I pay for this and still don't pass?" },
+    { id: "dismantle", label: "Dismantle It", tip: "Take the objection apart with a specific reason, a mechanism, or a reframe. Not reassurance, evidence.", placeholder: "e.g. That's exactly why the program runs until you pass, not for a fixed 12 weeks...", specificity: true },
+    { id: "proof", label: "Proof", tip: "One client who had the same objection and what happened. Name, number, timeframe.", placeholder: "e.g. Marcus said the same thing. He passed his beep test 6 weeks later at level 9.2." },
+    { id: "risk_reversal", label: "Risk Reversal", tip: "State the guarantee plainly. This is the moment the objection dies.", placeholder: "e.g. If you do the work and don't pass, you don't pay." },
+    { id: "cta", label: "CTA", tip: "Low friction. They already know what you offer. Just tell them where to click.", placeholder: "Write your CTA here...", ctaOptions: "retarget" }
+  ]},
+  rt_reminder: { id: "rt_reminder", mode: "retarget", label: "Reminder + Deadline", description: "They meant to act and life got in the way. Remind them what's waiting, show the cost of delay, give a reason to move now.", steps: [
+    { id: "hook", label: "Hook", tip: "A direct reminder. Short. Acknowledge they've been here before.", placeholder: "e.g. You were about to book last week. This is the nudge." },
+    { id: "cost_of_waiting", label: "Cost of Waiting", tip: "What does another month of not acting actually cost them? Be concrete: a missed test date, another month of the same income, a spot that closes.", placeholder: "e.g. Every week you wait is a week closer to your test date with the same numbers..." },
+    { id: "proof", label: "Proof", tip: "One quick result from someone who stopped waiting.", placeholder: "e.g. Sarah booked on a Tuesday, started Thursday, passed 8 weeks later." },
+    { id: "reason_now", label: "Reason to Act Now", tip: "A real deadline, a capacity limit, a price change, a test date. Never fake scarcity.", placeholder: "e.g. I take 10 new clients a month and there are 3 spots left for November.", specificity: true },
+    { id: "cta", label: "CTA", tip: "One click. Tell them exactly where.", placeholder: "Write your CTA here...", ctaOptions: "retarget" }
+  ]},
+  rt_proof_stack: { id: "rt_proof_stack", mode: "retarget", label: "Proof Stack", description: "Three results back to back, each one quietly answering a different doubt. For audiences who need to see it work for people like them.", steps: [
+    { id: "hook", label: "Hook", tip: "Set up the stack. Signal that what follows is results, not pitch.", placeholder: "e.g. Three people who were exactly where you are 60 days ago." },
+    { id: "result_1", label: "Result 1", tip: "A client who matches the viewer's most common doubt. Name, starting point, result, timeframe.", placeholder: "e.g. James, 34, two kids, full-time job. Went from failing the 2.4km run to a 10:45 in 7 weeks.", specificity: true },
+    { id: "result_2", label: "Result 2", tip: "A different angle: different age, situation, or starting point.", placeholder: "e.g. Priya had never done a push-up. Passed her police test with 28." },
+    { id: "result_3", label: "Result 3", tip: "The one that answers 'but will it work for ME'. Closest match to your target avatar.", placeholder: "e.g. Tom tried doing it on his own for a year. Passed 9 weeks after joining." },
+    { id: "bridge", label: "Bridge", tip: "One line connecting the results to the viewer. What did all three have in common?", placeholder: "e.g. None of them were naturally fit. All of them had a plan built for their test." },
+    { id: "cta", label: "CTA", tip: "Short. They've seen enough.", placeholder: "Write your CTA here...", ctaOptions: "retarget" }
+  ]},
+  rt_faq: { id: "rt_faq", mode: "retarget", label: "Answer the Question", description: "Answer the one question everyone asks before they book. Removes the friction of having to ask it.", steps: [
+    { id: "hook", label: "Hook", tip: "Name the question directly. The viewer should think 'yes, that's exactly what I wanted to know'.", placeholder: "e.g. The question I get asked most before someone books: how much time does this actually take?" },
+    { id: "answer", label: "The Answer", tip: "Answer it plainly and specifically. No hedging.", placeholder: "e.g. Four sessions a week, 45 minutes each. Built around your shifts.", specificity: true },
+    { id: "how_it_works", label: "How It Works", tip: "Two or three sentences on what they actually get. Concrete, not features.", placeholder: "e.g. You get a coach, a program built for your specific test, weekly check-ins, and mock tests..." },
+    { id: "who_for", label: "Who It's For", tip: "Qualify in one or two lines. Who should book, who shouldn't.", placeholder: "e.g. This is for people with a test date in the next 4 months who are serious about passing first time." },
+    { id: "cta", label: "CTA", tip: "Make the next step feel like the natural end of the conversation.", placeholder: "Write your CTA here...", ctaOptions: "retarget" }
+  ]},
+  rt_still_thinking: { id: "rt_still_thinking", mode: "retarget", label: "Still Thinking About It?", description: "The 30-second version. One hesitation, one reframe, one click. Best for most-aware audiences and short placements.", steps: [
+    { id: "hook", label: "Hook", tip: "Three to six words. Direct.", placeholder: "e.g. Still thinking about it?" },
+    { id: "hesitation", label: "The Hesitation", tip: "The one thought keeping them on the fence. Say it the way they'd say it.", placeholder: "e.g. 'I'll start when things calm down.'" },
+    { id: "reframe", label: "The Reframe", tip: "One or two lines that flip it. A truth they can't argue with.", placeholder: "e.g. Things don't calm down. Your test date doesn't move. The only thing that changes is how ready you are.", specificity: true },
+    { id: "cta", label: "CTA", tip: "One line. One click.", placeholder: "Write your CTA here...", ctaOptions: "retarget" }
   ]}
 };
 
@@ -1093,6 +1139,16 @@ const CTA_OPTIONS = {
       { heading: "Contrarian or bold", options: ["Follow me if you want the version of this nobody else is showing you.", "Follow me if you're done with the recycled advice.", "If you want the truth about [topic], follow me. I post it daily."] }
     ]
   },
+  retarget: {
+    label: "Retargeting CTA Options",
+    note: "They already know what you offer. Keep it short and remove every bit of friction.",
+    groups: [
+      { heading: "Sending to a booking or application page", options: ["You know where the link is. Click it and let's talk.", "The link below goes straight to my calendar. Pick a time.", "Click below, book the call, and we'll sort it out in 20 minutes.", "Hit the link, fill out the short form, and I'll be in touch this week."] },
+      { heading: "Objection already handled", options: ["If that was the thing holding you back, it's gone now. Click the link below.", "No more reasons to wait. Book your call below.", "You've seen the proof. The link is below."] },
+      { heading: "Deadline or capacity", options: ["There are [NUMBER] spots left this month. The link is below.", "Doors close [DATE]. Click below before they do.", "I only take [NUMBER] new clients a month. If you want one of them, book below."] },
+      { heading: "Organic post (comment keyword mechanic)", options: ["Comment [KEYWORD] and I'll send you the booking link.", "Drop [KEYWORD] below and we'll pick it up in the DMs."] }
+    ]
+  },
   indirect: {
     label: "Indirect Offer CTA Options",
     note: "The risk reversal is implicit because it's free. Make the action sound easy.",
@@ -1107,13 +1163,15 @@ const CTA_OPTIONS = {
 const FRAMEWORKS_BY_MODE = {
   direct: ["direct_short", "direct_long", "hso_direct", "pas_direct", "big_domino", "aida_direct"],
   follower: ["follow_value_promise", "follow_contrarian", "follow_story", "follow_content_preview"],
-  indirect: ["indirect_pas", "indirect_direct_value", "indirect_hso"]
+  indirect: ["indirect_pas", "indirect_direct_value", "indirect_hso"],
+  retarget: ["rt_objection", "rt_reminder", "rt_proof_stack", "rt_faq", "rt_still_thinking"]
 };
 
 const RECOMMENDED = {
   direct: { unaware: ["big_domino", "aida_direct"], problem_aware: ["pas_direct", "hso_direct", "aida_direct"], solution_aware: ["direct_short", "direct_long", "pas_direct"], product_aware: ["direct_long", "direct_short", "hso_direct"], most_aware: ["direct_short", "direct_long"] },
   follower: { unaware: ["follow_contrarian", "follow_story"], problem_aware: ["follow_value_promise", "follow_story", "follow_contrarian"], solution_aware: ["follow_value_promise", "follow_content_preview"], product_aware: ["follow_content_preview", "follow_value_promise"], most_aware: ["follow_content_preview"] },
-  indirect: { unaware: ["indirect_hso", "indirect_pas"], problem_aware: ["indirect_pas", "indirect_hso"], solution_aware: ["indirect_direct_value", "indirect_pas"], product_aware: ["indirect_direct_value"], most_aware: ["indirect_direct_value"] }
+  indirect: { unaware: ["indirect_hso", "indirect_pas"], problem_aware: ["indirect_pas", "indirect_hso"], solution_aware: ["indirect_direct_value", "indirect_pas"], product_aware: ["indirect_direct_value"], most_aware: ["indirect_direct_value"] },
+  retarget: { unaware: ["rt_faq"], problem_aware: ["rt_faq", "rt_proof_stack"], solution_aware: ["rt_proof_stack", "rt_faq"], product_aware: ["rt_objection", "rt_proof_stack", "rt_faq"], most_aware: ["rt_still_thinking", "rt_reminder", "rt_objection"] }
 };
 
 // ═══════════════════════════════════════════
@@ -1214,7 +1272,7 @@ CONTEXT:
 CONTENT FROM BUILDER:
 ${answersText}
 
-WHAT A HOOK IS: the first 1 to 2 sentences spoken on camera. The opening line only, not the ad. Hard limits: maximum 2 sentences, maximum 25 words. If you write a third sentence you have failed.
+${state.adMode === "retarget" ? "RETARGETING AD: the viewer has already seen this brand, watched a video, or visited the page and did not act. Never introduce the business. Never explain what it does. Open as if continuing a conversation: name that they've been here before, or name the exact thing stopping them.\n\n" : ""}WHAT A HOOK IS: the first 1 to 2 sentences spoken on camera. The opening line only, not the ad. Hard limits: maximum 2 sentences, maximum 25 words. If you write a third sentence you have failed.
 
 HUMANIZER RULES — apply every single one:
 - Write for SPOKEN WORD. Every line should sound natural when said out loud.
@@ -1271,7 +1329,7 @@ STRATEGIC CONTEXT:
 - Primary Emotion to trigger: ${state.dominantEmotion}
 - Duration target: ${dur.label} / ${dur.wordCount} words spoken naturally
 
-SELECTED HOOK (use this exactly as written to open the script):
+${state.adMode === "retarget" ? "RETARGETING RULES: the viewer already knows this brand. No introductions, no credentials, no explaining the offer from scratch. Assume they have watched the VSL or seen the page. Speak to the hesitation, not the problem. Shorter is better.\n\n" : ""}SELECTED HOOK (use this exactly as written to open the script):
 ${state.selectedHook}
 
 CONTENT INPUT (use this raw material, don't invent details):
@@ -1360,6 +1418,8 @@ function buildCaptionPrompt(durId, script) {
   const dur = AD_DURATIONS.find(d => d.id === durId);
   const ctaHint = state.adMode === "follower"
     ? "The only CTA is to follow the account."
+    : state.adMode === "retarget"
+      ? "This is a RETARGETING ad. The reader already knows the brand. Do not introduce the business or explain what it does. Speak to someone who has seen the offer and not acted yet. The CTA sends them to book or apply."
     : state.adMode === "indirect"
       ? "The CTA sends them to claim a free resource (link or comment keyword)."
       : "The CTA sends them to click the link to book or apply.";
@@ -1462,12 +1522,14 @@ function modeColor(modeId) {
   if (modeId === "direct") return "#e8500a";
   if (modeId === "follower") return "#4a7aff";
   if (modeId === "indirect") return "#4a8a4a";
+  if (modeId === "retarget") return "#a259ff";
   return "#e8500a";
 }
 
 function modeClass(modeId) {
   if (modeId === "follower") return "selected-blue";
   if (modeId === "indirect") return "selected-green";
+  if (modeId === "retarget") return "selected-purple";
   return "selected";
 }
 
@@ -1634,7 +1696,7 @@ function renderMode() {
   );
   wrap.appendChild(header);
 
-  const grid = el("div", { class: "card-grid cols-3" });
+  const grid = el("div", { class: "card-grid cols-2" });
 
   for (const [id, mode] of Object.entries(AD_MODES)) {
     const card = document.createElement("button");
@@ -1642,7 +1704,7 @@ function renderMode() {
     card.innerHTML = `
       <span class="card-emoji">${mode.emoji}</span>
       <div class="card-label">${mode.label}</div>
-      <div class="card-tagline${id === "follower" ? " blue" : id === "indirect" ? " green" : ""}">${mode.tagline}</div>
+      <div class="card-tagline${id === "follower" ? " blue" : id === "indirect" ? " green" : id === "retarget" ? " purple" : ""}">${mode.tagline}</div>
       <p class="card-desc">${mode.description}</p>
     `;
     card.addEventListener("click", () => {
@@ -2206,7 +2268,7 @@ function renderResult() {
 
   const meta = el("div", { class: "result-meta" });
   const chips = [
-    { text: mode.label, cls: state.adMode === "follower" ? "blue" : state.adMode === "indirect" ? "green" : "orange" },
+    { text: mode.label, cls: state.adMode === "follower" ? "blue" : state.adMode === "indirect" ? "green" : state.adMode === "retarget" ? "purple" : "orange" },
     { text: stage.label },
     { text: soph.label },
     { text: fw.label }
