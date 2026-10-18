@@ -54,12 +54,25 @@ async function blobList(prefix) {
   const data = await r.json();
   return data.blobs || [];
 }
+let readStrategy = "";
 async function blobRead(url) {
-  // Private stores need the token on the read; public ones ignore it.
-  let r = await fetch(url, { headers: { authorization: `Bearer ${token}` }, cache: "no-store" });
-  if (!r.ok) r = await fetch(url, { cache: "no-store" });
-  if (!r.ok) throw new Error(`blob read ${r.status}`);
-  return r.text();
+  // Private stores: the SDK reads through the API with the token. Try the known
+  // routes in order and remember which one works for this process.
+  const attempts = [
+    ["get-endpoint", () => fetch(`${BLOB}/get?url=${encodeURIComponent(url)}`, { headers: { authorization: `Bearer ${token}`, "x-api-version": API_VERSION }, cache: "no-store" })],
+    ["url-with-token", () => fetch(url, { headers: { authorization: `Bearer ${token}`, "x-api-version": API_VERSION }, cache: "no-store" })],
+    ["url-public", () => fetch(url, { cache: "no-store" })],
+  ];
+  const order = readStrategy ? attempts.filter(a => a[0] === readStrategy).concat(attempts.filter(a => a[0] !== readStrategy)) : attempts;
+  let lastStatus = 0;
+  for (const [name, go] of order) {
+    try {
+      const r = await go();
+      if (r.ok) { readStrategy = name; return r.text(); }
+      lastStatus = r.status;
+    } catch (e) { lastStatus = -1; }
+  }
+  throw new Error(`blob read ${lastStatus}`);
 }
 async function blobWrite(pathname, body) {
   const r = await fetch(`${BLOB}/${pathname}`, {
@@ -71,6 +84,7 @@ async function blobWrite(pathname, body) {
       "x-add-random-suffix": "0",
       "x-allow-overwrite": "1",
       "x-cache-control-max-age": "0",
+      "x-access": "private",
     },
     body,
   });
@@ -153,6 +167,7 @@ export default async function handler(req, res) {
       out.write = true;
       const back = await readDoc(id);
       out.read = back && back.ping === stamp;
+      out.readStrategy = readStrategy;
       if (!localDir) {
         const blobs = await blobList(`library/${id}/`);
         await blobDelete(blobs.map((b) => b.url));
