@@ -75,7 +75,7 @@ async function blobRead(url) {
   throw new Error(`blob read ${lastStatus}`);
 }
 async function blobWrite(pathname, body) {
-  const r = await fetch(`${BLOB}/${pathname}`, {
+  const r = await fetch(`${BLOB}/?pathname=${encodeURIComponent(pathname)}`, {
     method: "PUT",
     headers: {
       authorization: `Bearer ${token}`,
