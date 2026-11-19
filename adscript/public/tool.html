@@ -1624,6 +1624,9 @@ HUMANIZER RULES — apply every single one:
 - Mirror the language a real person would use in conversation, not ad copy.
 - Never rhyme unless it's completely natural.
 - The hook must stop the scroll in the first 2 to 3 seconds.
+- Each hook names the target avatar or their biggest pain or desired outcome, so the right person knows it's for them straight away.
+- Make it specific: a number, a situation, or the words they'd use themselves. Generic hooks that fit any business fail.
+- No contrast tics like "it's not X, it's Y" or "not just X".
 
 ${varietyBlock()}Generate exactly 3 distinct hooks. Each must take a genuinely different angle and a different sentence structure from the others. Format your response EXACTLY as:
 
@@ -1685,12 +1688,15 @@ HUMANIZER RULES — non-negotiable:
 4. No ad-speak: "game-changing", "transform", "unlock", "skyrocket", "journey", "leverage", "seamless", "revolutionize", "cutting-edge"
 5. No weak intros: "Hey guys", "So I wanted to share", "Today I'm going to", "Are you tired of"
 6. Every claim needs specificity. Numbers beat adjectives. Names beat "a client".
-7. Spoken transitions only: "Here's the thing", "And that's when", "So", "But here's what changed"
+7. Spoken transitions only, like "And that's when", "So", "Then", "That's why". Never "Here's the thing"
 8. The CTA must be singular. One action. Stated clearly, twice maximum.
 9. No summary or conclusion paragraphs. End on the CTA.
 10. The script must hit the word count target for the duration selected.
 10b. Vary the rhythm and structure. Do not fall into the pattern 'If you're X... I'm Y... I help Z'. Every script you write should feel like a different person wrote it on a different day. Structural seed for this one: ${state.seed || STYLE_SEEDS[0]}
 11. Use paragraph breaks for natural spoken pauses. No bullet points in the script.
+12. No contrast tics ("it's not X, it's Y", "not just X"), no groups of three for rhythm, no stacked rhetorical questions, no filler like "Let that sink in" or "The truth is".
+
+${STRENGTH_CHECK}
 
 Output ONLY the script. No headers, no section labels, no word count, no notes. Just the script as it would be spoken.`;
 }
@@ -1751,7 +1757,21 @@ const HUMANIZER_SHORT = `HUMANIZER RULES — non-negotiable:
 - Short sentences. Specific numbers over adjectives. Names over "a client".
 - Banned words: game-changing, transform, unlock, skyrocket, journey, leverage, seamless, revolutionize, cutting-edge, elevate, empower.
 - No weak openers: "Hey guys", "Are you tired of", "Imagine if", "Did you know".
-- One CTA. Stated once, clearly.`;
+- One CTA. Stated once, clearly.
+- No contrast tics: "it's not X, it's Y", "not just X", "X isn't the problem, Y is". Say the thing directly.
+- No groups of three for rhythm's sake, no stacked rhetorical questions.
+- No filler lines: "Here's the thing", "Let that sink in", "In short", "The truth is".`;
+
+const STRENGTH_CHECK = `STRENGTH CHECK: before you answer, check the script against every line below. If any line fails, rewrite the script and check again. Only output a script that passes all of them.
+1. Hook: speaks to the target avatar or their biggest pain within the first 3 seconds.
+2. Pain: names at least one of their real pain points, specific to their situation and in words they would use themselves. Vague words like "struggling" or "it's hard" don't count.
+3. Desired outcome: says clearly what their life or business looks like after. Woven into the argument, never a lone line tacked on near the end.
+4. Proof: if results were given, use the most specific one, with a name and a number. Never repeat the proof the hook already used. Never invent a result, name or number.
+5. Mechanism: one or two concrete lines on how the method gets them there. Name the method or its steps if they were given.
+6. Risk and fit: include a guarantee only if one was given, and keep its meaning exact. If a qualifier was given, say plainly who this is not for.
+7. One CTA that matches the ad mode.
+8. Flow: read it out loud. Every paragraph leads into the next. No line exists only to tick a box.
+9. Length: count the spoken words and land inside the target range.`;
 
 function buildCaptionPrompt(durId, script) {
   const mode = AD_MODES[state.adMode];
@@ -1831,6 +1851,9 @@ ${instruction}
 ${HUMANIZER_SHORT}
 - Write entirely for spoken delivery. Paragraph breaks for natural pauses. No bullet points.
 - End on the CTA. No summary.
+- Follow the instruction, but don't break anything that was already working.
+
+${STRENGTH_CHECK}
 
 Output ONLY the rewritten script. No headers, no notes, no word count.`;
 }
@@ -3142,6 +3165,7 @@ RULES:
 - Put visual directions in square brackets on their own line, like [B-roll: client check-in on phone] or [Text on screen: 3 mistakes]. For a carousel, write it slide by slide instead.
 - Never invent numbers, names or results. Use [their detail] where the creator needs to fill something in.
 - End with the CTA, stated once.
+- Before answering, check: the first line hooks the right person, the middle delivers one clear point or payoff they can use, every line leads into the next, and it lands inside 80 to 120 words. Rewrite until it does.
 
 ${HUMANIZER_SHORT}
 
