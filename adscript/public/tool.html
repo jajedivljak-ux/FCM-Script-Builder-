@@ -1497,7 +1497,8 @@ async function callAPI(prompt, maxTokens) {
     res = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Access-Code": accessCode },
-      body: JSON.stringify({ prompt, maxTokens: maxTokens || 1200 })
+      // Strip dashes from the instructions too, so the model never sees one to copy.
+      body: JSON.stringify({ prompt: String(prompt).replace(/\s*[\u2014\u2013]\s*/g, ", "), maxTokens: maxTokens || 1200 })
     });
   } catch (e) {
     throw new Error("Couldn't reach the server. Check your connection and try again.");
@@ -1669,7 +1670,7 @@ STRATEGIC CONTEXT:
 - Audience Awareness: ${stage.label} (Stage ${stage.level}) — ${stage.description}
 - Market Sophistication: ${soph.label} — ${soph.hookMod}
 - Primary Emotion to trigger: ${state.dominantEmotion}
-- Duration target: ${dur.label} / ${dur.wordCount} words spoken naturally
+- Duration target: ${dur.label}, ${dur.wordCount} spoken naturally
 
 ${state.direction.trim() ? "CREATIVE DIRECTION FROM THE USER (follow this above everything else):\n" + state.direction.trim() + "\n\n" : ""}${state.adMode === "retarget" ? "RETARGETING RULES: the viewer already knows this brand. No introductions, no credentials, no explaining the offer from scratch. Assume they have watched the VSL or seen the page. Speak to the hesitation, not the problem. Shorter is better.\n\n" : ""}SELECTED HOOK (use this exactly as written to open the script):
 ${state.selectedHook}
@@ -1692,7 +1693,7 @@ HUMANIZER RULES — non-negotiable:
 8. The CTA must be singular. One action. Stated clearly, twice maximum.
 9. No summary or conclusion paragraphs. End on the CTA.
 10. The script must hit the word count target for the duration selected.
-10b. Vary the rhythm and structure. Do not fall into the pattern 'If you're X... I'm Y... I help Z'. Every script you write should feel like a different person wrote it on a different day. Structural seed for this one: ${state.seed || STYLE_SEEDS[0]}
+10b. Vary the rhythm and structure. Do not fall into the pattern 'If you're X... I'm Y... I help Z'. Every script you write should feel like a different person wrote it on a different day. Structural seed for the body after the hook (the hook itself stays word for word): ${state.seed || STYLE_SEEDS[0]}
 11. Use paragraph breaks for natural spoken pauses. No bullet points in the script.
 12. No contrast tics ("it's not X, it's Y", "not just X"), no groups of three for rhythm, no stacked rhetorical questions, no filler like "Let that sink in" or "The truth is".
 
